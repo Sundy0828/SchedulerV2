@@ -1,0 +1,233 @@
+service: schedulerServer
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+functions:
+  # INSTITUTIONS
+  getInstitution:
+    handler: controllers/Institution.get
+    events:
+      - http:
+          path: Institution/{id}
+          method: get
+          cors: true
+  getAllInstitutions:
+    handler: controllers/Institution.getAll
+    events:
+      - http:
+          path: Institution
+          method: get
+          cors: true
+  createInstitution:
+    handler: controllers/Institution.create
+    events:
+      - http:
+          path: Institution
+          method: post
+          cors: true
+  updateInstitution:
+    handler: controllers/Institution.update
+    events:
+      - http:
+          path: Institution/{id}
+          method: put
+          cors: true
+  deleteInstitution:
+    handler: controllers/Institution.delete
+    events:
+      - http:
+          path: Institution/{id}
+          method: delete
+          cors: true
+
+  # USERS
+  getUser:
+    handler: controllers/User.get
+    events:
+      - http:
+          path: User/{id}
+          method: get
+          cors: true
+  getAllUsers:
+    handler: controllers/User.getAll
+    events:
+      - http:
+          path: User
+          method: get
+          cors: true
+  createUser:
+    handler: controllers/User.create
+    events:
+      - http:
+          path: User
+          method: post
+          cors: true
+  updateUser:
+    handler: controllers/User.update
+    events:
+      - http:
+          path: User/{id}
+          method: put
+          cors: true
+  deleteUser:
+    handler: controllers/User.delete
+    events:
+      - http:
+          path: User/{id}
+          method: delete
+          cors: true
+
+  # CAPABILITIES
+  getCapability:
+    handler: controllers/Capability.get
+    events:
+      - http:
+          path: Capability/{id}
+          method: get
+          cors: true
+  getAllCapabilities:
+    handler: controllers/Capability.getAll
+    events:
+      - http:
+          path: Capability
+          method: get
+          cors: true
+  createCapability:
+    handler: controllers/Capability.create
+    events:
+      - http:
+          path: Capability
+          method: post
+          cors: true
+  updateCapability:
+    handler: controllers/Capability.update
+    events:
+      - http:
+          path: Capability/{id}
+          method: put
+          cors: true
+  deleteCapability:
+    handler: controllers/Capability.delete
+    events:
+      - http:
+          path: Capability/{id}
+          method: delete
+          cors: true
+
+  # USERTYPES
+  getUserType:
+    handler: controllers/UserType.get
+    events:
+      - http:
+          path: UserType/{id}
+          method: get
+          cors: true
+  getAllUserTypes:
+    handler: controllers/UserType.getAll
+    events:
+      - http:
+          path: UserType
+          method: get
+          cors: true
+  createUserType:
+    handler: controllers/UserType.create
+    events:
+      - http:
+          path: UserType
+          method: post
+          cors: true
+  updateUserType:
+    handler: controllers/UserType.update
+    events:
+      - http:
+          path: UserType/{id}
+          method: put
+          cors: true
+  deleteUserType:
+    handler: controllers/UserType.delete
+    events:
+      - http:
+          path: UserType/{id}
+          method: delete
+          cors: true
+
+  # YEARS
+  getYear:
+    handler: controllers/Year.get
+    events:
+      - http:
+          path: Year/{id}
+          method: get
+          cors: true
+  getAllYears:
+    handler: controllers/Year.getAll
+    events:
+      - http:
+          path: Year
+          method: get
+          cors: true
+  createYear:
+    handler: controllers/Year.create
+    events:
+      - http:
+          path: Year
+          method: post
+          cors: true
+  updateYear:
+    handler: controllers/Year.update
+    events:
+      - http:
+          path: Year/{id}
+          method: put
+          cors: true
+  deleteYear:
+    handler: controllers/Year.delete
+    events:
+      - http:
+          path: Year/{id}
+          method: delete
+          cors: true
+
+  # SEMESTERS
+  getSemester:
+    handler: controllers/Semester.get
+    events:
+      - http:
+          path: Semester/{id}
+          method: get
+          cors: true
+  getAllSemesters:
+    handler: controllers/Semester.getAll
+    events:
+      - http:
+          path: Semester
+          method: get
+          cors: true
+  createSemester:
+    handler: controllers/Semester.create
+    events:
+      - http:
+          path: Semester
+          method: post
+          cors: true
+  updateSemester:
+    handler: controllers/Semester.update
+    events:
+      - http:
+          path: Semester/{id}
+          method: put
+          cors: true
+  deleteSemester:
+    handler: controllers/Semester.delete
+    events:
+      - http:
+          path: Semester/{id}
+          method: delete
+          cors: true
+
+
+plugins:
+  - serverless-offline
