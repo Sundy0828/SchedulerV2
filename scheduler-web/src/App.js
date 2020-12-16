@@ -1,22 +1,13 @@
 import logo from './logo.svg';
+import 'fontsource-roboto';
 import './App.css';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import clsx from 'clsx';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+import { Card, List, Divider, ListItem, ListItemIcon, ListItemText, SwipeableDrawer, Typography, Button, IconButton, Toolbar, AppBar, CardContent } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
   },
   fullList: {
     width: 'auto',
+  },
+  card: {
+    width: '100%',
+    height: 'Calc(VH - 64px)'
   },
 }));
 
@@ -62,8 +57,21 @@ function App() {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
+      <Typography variant="h5" className={classes.title}>
+            Scheduler
+      </Typography>
+      <Typography variant="h6" className={classes.title}>
+            Institutions
+      </Typography>
+      <Typography variant="body1" className={classes.title}>
+            Systems
+      </Typography>
+      <Typography variant="body2" className={classes.title}>
+            Systems@scheduler.com
+      </Typography>
+      <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+        {['Institutions', 'Disciplines', 'Courses', 'Students'].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
             <ListItemText primary={text} />
@@ -72,7 +80,16 @@ function App() {
       </List>
       <Divider />
       <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
+        {['Courses Taken', 'Course Catalog'].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {['Settings', 'Logout'].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
             <ListItemText primary={text} />
@@ -89,13 +106,20 @@ function App() {
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={toggleDrawer("left", true)}>
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h5" className={classes.title}>
             Scheduler
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
 
+      <Card class="app-card">
+        <CardContent>
+        <Button variant="contained" color="primary">
+          Primary
+        </Button>
+        </CardContent>
+      </Card>
       
       <React.Fragment key={"left"}>
         <SwipeableDrawer
