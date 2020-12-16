@@ -40,8 +40,9 @@ module.exports.create = async (event, context, callback) => {
 
 // delete
 module.exports.delete = async (event, context, callback) => {
-    const id = event.pathParameters.id;
-    var result = await deleteUserTypeCapability(id);
+    const userTypeId = event.pathParameters.userTypeId;
+    const capabilityId = event.pathParameters.capabilityId;
+    var result = await deleteUserTypeCapability(userTypeId, capabilityId);
 
     callback(null, {
         statusCode: 200,

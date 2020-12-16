@@ -1,8 +1,12 @@
 # Scheduler
-A repository for a scheduler application that allows users to find the classes for the rest of their school year based off of their major, courses taken, and more. Available for iOS, android and Web Apps.\
-Front end: angular\
-Backend: nodejs (AWS serverless)\
-Database: postgresql
+A repository for a scheduler application that allows users to find the classes for the rest of their school year based off of their major, courses taken, and more. Available for iOS, android and Web Apps.
+
+```
+WebFrontEnd: React or Angular
+MobileFrontEnd: Native Environment?
+Backend: Nodejs (AWS serverless)
+Database: Postgresql
+```
 
 
 ## Installation
@@ -26,6 +30,12 @@ module.exports =  {
     SECRET_KEY_HASH: "UUID",
     BCRYPT_SALT_ROUNDS: 12
   }
+```
+
+start up serverless environment from schedulerServer directory
+
+```bash
+serverless offline
 ```
 
 ## Contributing
