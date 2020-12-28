@@ -1,0 +1,19 @@
+{
+   "name": "scheduler-ts-server",
+   "version": "0.0.1",
+   "description": "University Scheduler",
+   "devDependencies": {
+      "ts-node": "3.3.0",
+      "@types/node": "^8.0.29",
+      "typescript": "3.3.3333"
+   },
+   "dependencies": {
+      "typeorm": "0.2.29",
+      "reflect-metadata": "^0.1.10",
+      "pg": "^8.4.0"
+   },
+   "scripts": {
+      "start": "nodemon --exec ts-node src/index.ts",
+      "gen-schema-types": "gql2ts src/schema.graphql -o src/types/schema.d.ts"
+   }
+}
