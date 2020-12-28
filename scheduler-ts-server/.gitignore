@@ -1,6 +1,4 @@
-.idea/
-.vscode/
-node_modules/
-build/
-tmp/
-temp/
+dist
+node_modules
+# you should add that
+# .env
