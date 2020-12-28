@@ -228,6 +228,36 @@ functions:
           method: delete
           cors: true
 
+  # UserInstitutionAccess
+  getSemester:
+    handler: controllers/Semester.get
+    events:
+      - http:
+          path: Semester/{id}
+          method: get
+          cors: true
+  getAllSemesters:
+    handler: controllers/Semester.getAll
+    events:
+      - http:
+          path: Semester
+          method: get
+          cors: true
+  createSemester:
+    handler: controllers/Semester.create
+    events:
+      - http:
+          path: Semester
+          method: post
+          cors: true
+  deleteSemester:
+    handler: controllers/Semester.delete
+    events:
+      - http:
+          path: Semester/{id}
+          method: delete
+          cors: true
+
 
 plugins:
   - serverless-offline

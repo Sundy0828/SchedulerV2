@@ -12,7 +12,7 @@ function pgQueryParams(sql, params = [], code = "")
     }
 }
 
-function standardReturn(success, msg = "", data = [], selectOne)
+function standardReturn(success, msg = "", data = [], selectOne = false)
 {
     var singleReturn = new Object();
     singleReturn.success = success;
