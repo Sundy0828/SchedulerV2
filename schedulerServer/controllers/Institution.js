@@ -86,7 +86,7 @@ async function getAllInstitutions()
     var msg = success ? "Successfully retrieved all institutions." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount)
 }
 
 async function getInstitutionByPublicKey(publicKey)
@@ -99,7 +99,7 @@ async function getInstitutionByPublicKey(publicKey)
     var msg = success ? "Successfully retrieved institution." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function getInstitution(id)
@@ -112,7 +112,7 @@ async function getInstitution(id)
     var msg = success ? "Successfully retrieved institution." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function createInstitution(institution)
@@ -137,7 +137,7 @@ async function createInstitution(institution)
     var msg = success ? "Successfully created institution." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function updateInstitution(id, institution)

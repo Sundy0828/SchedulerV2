@@ -75,7 +75,7 @@ async function getAllUserTypeCapabilities()
     var msg = success ? "Successfully retrieved all user_type_capabilities." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount)
 }
 
 async function getUserTypeCapability(id)
@@ -88,7 +88,7 @@ async function getUserTypeCapability(id)
     var msg = success ? "Successfully retrieved User Type Capability." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function createUserTypeCapability(user_type_capability)
@@ -113,32 +113,7 @@ async function createUserTypeCapability(user_type_capability)
     var msg = success ? "Successfully created User Type Capability." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
-}
-
-async function updateUserTypeCapability(id, user_type_capability)
-{
-    var hasParams = utility.validateParams(user, requiredParams);
-    if (!hasParams.success)
-    {
-        return hasParams
-    }
-    var exists = await userTypeCapabilityExists(user_type_capability.name);
-    if (exists.success)
-    {
-        return utility.standardReturn(false, "UserTypeCapability already exists.")
-    }
-    var sql = "UPDATE user_type_capabilities SET name = $2 WHERE user_type_capability_id = $1 RETURNING *";
-    var params = [
-        id,
-        user_type_capability.name
-    ];
-    var res = await utility.pgQueryParams(sql, params, code);
-
-    var success = res == code ? false : true;
-    var msg = success ? "Successfully updated User Type Capability." : "Error: in " + code;
-
-    return utility.standardReturn(success, msg)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function deleteUserTypeCapability(id)

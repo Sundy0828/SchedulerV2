@@ -75,7 +75,7 @@ async function getAllUserInstitutionAccess()
     var msg = success ? "Successfully retrieved all user_institution_access." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount)
 }
 
 async function getUserInstitutionAccess(user_id, institution_id)
@@ -88,7 +88,7 @@ async function getUserInstitutionAccess(user_id, institution_id)
     var msg = success ? "Successfully retrieved user institution access." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function createUserInstitutionAccess(user_institution_access)
@@ -113,7 +113,7 @@ async function createUserInstitutionAccess(user_institution_access)
     var msg = success ? "Successfully created user_institution_access." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function deleteUserInstitutionAccess(user_id, institution_id)
