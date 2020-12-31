@@ -12,7 +12,7 @@ function pgQueryParams(sql, params = [], code = "")
     }
 }
 
-function standardReturn(success, msg = "", data = [], selectOne)
+function standardReturn(success, msg = "", data, count = 0, selectOne = false)
 {
     var singleReturn = new Object();
     singleReturn.success = success;
@@ -24,19 +24,29 @@ function standardReturn(success, msg = "", data = [], selectOne)
 
     if (data)
     {
-        singleReturn.count = data.rowCount;
-        singleReturn.data = selectOne ? data.rows[0] : data.rows;
+        singleReturn.data = selectOne ? data[0] : data;
+    }
+
+    if (count)
+    {
+        singleReturn.count = count;
     }
 
     return singleReturn;
 }
 
-function hashPassword(password)
+function generateSalt()
 {
     const salt = bcrypt.genSaltSync(config.BCRYPT_SALT_ROUNDS);
+
+    return salt;
+}
+
+function hashPassword(password, salt)
+{
     const hash = bcrypt.hashSync(password, salt);
 
-    return {"salt": salt, "hash": hash};
+    return hash;
 }
 
 function validateParams(values, required)
@@ -64,4 +74,4 @@ function aesEncrypt(encrypt, input)
     }
 }
 
-module.exports = {pgQueryParams, standardReturn, hashPassword, validateParams}
+module.exports = {pgQueryParams, standardReturn, generateSalt, hashPassword, validateParams}

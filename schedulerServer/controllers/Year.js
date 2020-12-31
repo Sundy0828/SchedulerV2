@@ -87,7 +87,7 @@ async function getAllYears(institutionId)
     var msg = success ? "Successfully retrieved all years." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount)
 }
 
 async function getYear(id)
@@ -100,7 +100,7 @@ async function getYear(id)
     var msg = success ? "Successfully retrieved year." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function createYear(year)
@@ -126,7 +126,7 @@ async function createYear(year)
     var msg = success ? "Successfully created year." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function updateYear(id, year)

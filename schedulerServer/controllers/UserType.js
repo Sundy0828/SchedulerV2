@@ -86,7 +86,7 @@ async function getAllUserTypes()
     var msg = success ? "Successfully retrieved all User Types." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount)
 }
 
 async function getUserType(id)
@@ -99,7 +99,7 @@ async function getUserType(id)
     var msg = success ? "Successfully retrieved User Type." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function createUserType(userType)
@@ -124,7 +124,7 @@ async function createUserType(userType)
     var msg = success ? "Successfully created User Type." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function updateUserType(id, userType)
