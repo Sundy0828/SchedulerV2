@@ -1,4 +1,5 @@
 const utility = require("../core/Utility");
+const auth = require("../core/Authentication");
 const config = require('../config/config');
 
 const code = "User";
@@ -63,6 +64,64 @@ module.exports.delete = async (event, context, callback) => {
         statusCode: 200,
         body: JSON.stringify(result)
     })
+}
+
+// login
+module.exports.login = async (event, context, callback) => {
+    const body = JSON.parse(event.body);
+    var result = await loginUser(body);
+
+    callback(null, {
+        statusCode: 200,
+        body: JSON.stringify(result)
+    })
+}
+
+async function loginUser(login)
+{
+    var exists = await userExists(login.username);
+    if (!exists.success)
+    {
+        return utility.standardReturn(false, "Invalid Email");
+    }
+    var user = await getUserByEmail(login.username);
+    if (!user.success)
+    {
+        return utility.standardReturn(false, "Invalid Email");
+    }
+    user = user.data;
+    if (user.login_attempts > 3)
+    {
+        return utility.standardReturn(false, "Account is locked, please contact administer for help.");
+    }
+    var hash = utility.hashPassword(login.password, user.salt);
+
+    if (user.password != hash)
+    {
+        updateFailedAttempts(user.user_key, user.login_attempts + 1, user.login_attempts>3);
+        return utility.standardReturn(false, "Invalid Password");
+    }
+
+    return await auth.signJWTToken(user.user_key);
+}
+
+async function updateFailedAttempts(userKey, loginAttempts, startTimeout = false)
+{
+    var sql = "UPDATE users SET login_attempts=$2 ";
+    var params = [userKey, loginAttempts];
+    if (startTimeout)
+    {
+        params.push(new Date().toISOString());
+        sql += " timeout_start=$3 "
+    }
+    sql += " WHERE user_key = $1 RETURNING *";
+    var res = await utility.pgQueryParams(sql, params, code);
+
+    var success = res == code ? false : true;
+    var msg = success ? "Successfully retrieved all users." : "Error: in " + code;
+    var data = res != code ? res : null;
+
+    return utility.standardReturn(success, msg, data.rows, data.rowCount)
 }
 
 async function updateUser(userKey, user)
@@ -135,12 +194,13 @@ async function createUser(user)
         return utility.standardReturn(false, "User already exists.")
     }
     var sql = "INSERT INTO users (name, email, password, salt, user_meta, login_attempts, user_type_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *";
-    var saltHash = utility.hashPassword(user.password);
+    var salt = utility.generateSalt();
+    var hash = utility.hashPassword(user.password, salt);
     var params = [
         {"firstName": user.firstName, "lastName": user.lastName},
         user.email,
-        saltHash.hash,
-        saltHash.salt,
+        hash,
+        salt,
         {
             "address": user.address,
             "address2": user.address2,
@@ -158,7 +218,7 @@ async function createUser(user)
     var msg = success ? "Successfully created user." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function getAllUsers()
@@ -171,7 +231,7 @@ async function getAllUsers()
     var msg = success ? "Successfully retrieved all users." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount)
 }
 
 async function getUserByKey(userKey)
@@ -184,7 +244,20 @@ async function getUserByKey(userKey)
     var msg = success ? "Successfully retrieved user." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
+}
+
+async function getUserByEmail(email)
+{
+    var sql = "SELECT * FROM users WHERE email = $1";
+    var params = [email];
+    var res = await utility.pgQueryParams(sql, params, code);
+    
+    var success = res == code ? false : true;
+    var msg = success ? "Successfully retrieved user." : "Error: in " + code;
+    var data = res != code ? res : null;
+
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function userExists(email)

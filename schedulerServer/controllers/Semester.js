@@ -87,7 +87,7 @@ async function getAllSemesters(institutionId)
     var msg = success ? "Successfully retrieved all semesters." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount)
 }
 
 async function getSemester(id)
@@ -100,7 +100,7 @@ async function getSemester(id)
     var msg = success ? "Successfully retrieved semester." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function createSemester(semester)
@@ -126,7 +126,7 @@ async function createSemester(semester)
     var msg = success ? "Successfully created semester." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function updateSemester(id, semester)

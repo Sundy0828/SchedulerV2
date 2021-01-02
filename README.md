@@ -28,7 +28,8 @@ module.exports =  {
     USER: 'User Name',
     PASSWORD: 'Password',
     SECRET_KEY_HASH: "UUID",
-    BCRYPT_SALT_ROUNDS: 12
+    BCRYPT_SALT_ROUNDS: 12,
+    JWT_TOKEN: "UUID"
   }
 ```
 

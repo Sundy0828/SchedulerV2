@@ -86,7 +86,7 @@ async function getAllCapabilities()
     var msg = success ? "Successfully retrieved all capabilities." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount)
 }
 
 async function getCapability(id)
@@ -99,7 +99,7 @@ async function getCapability(id)
     var msg = success ? "Successfully retrieved capability." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function createCapability(capability)
@@ -124,7 +124,7 @@ async function createCapability(capability)
     var msg = success ? "Successfully created capability." : "Error: in " + code;
     var data = res != code ? res : null;
 
-    return utility.standardReturn(success, msg, data, true)
+    return utility.standardReturn(success, msg, data.rows, data.rowCount, true)
 }
 
 async function updateCapability(id, capability)

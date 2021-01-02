@@ -1,0 +1,190 @@
+swagger: "2.0"
+info:
+  description: "The Scheduler API connects users to institutions. This allows students to get a mock school course list, and when to take their courses. Faculty is also able to create and modify courses."
+  version: "1.0.0"
+  title: "Scheduler"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "info@scheduler.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:3000/dev"
+basePath: ""
+tags:
+- name: "Institution"
+  description: "Everything about your Institutions"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+schemes:
+- "https"
+- "http"
+paths:
+  /Institution:
+    post:
+      tags:
+      - "Institution"
+      summary: "Create a new institution"
+      description: ""
+      operationId: "addInstitution"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Institution object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Institution"
+      responses:
+        "405":
+          description: "Invalid input"
+    get:
+      tags:
+      - "Institution"
+      summary: "Get all institutions"
+      description: ""
+      operationId: "updateInstitution"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Institution object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Institution"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Institution not found"
+        "405":
+          description: "Validation exception"
+  /Institution/{id}:
+    get:
+      tags:
+      - "Institution"
+      summary: "Find institution by ID"
+      description: "Returns a single institution"
+      operationId: "getInstitutionById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of institution to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Institution"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Institution not found"
+    put:
+      tags:
+      - "Institution"
+      summary: "Updates a institution in the store with form data"
+      description: ""
+      operationId: "updateInstitutionWithForm"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of institution that needs to be updated"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "name"
+        in: "formData"
+        description: "Updated name of the institution"
+        required: false
+        type: "string"
+      - name: "status"
+        in: "formData"
+        description: "Updated status of the institution"
+        required: false
+        type: "string"
+      responses:
+        "405":
+          description: "Invalid input"
+    delete:
+      tags:
+      - "Institution"
+      summary: "Deletes a institution"
+      description: ""
+      operationId: "deleteInstitution"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Institution id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "Logo image in PNG format"
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: This is an optional boolean value indicating the success or failure of the request.
+              msg:
+                type: string
+                description: This is an optional message describing additional details of the results of the request.
+              count:
+                type: string
+                description: The count of the number of records returned.
+              data:
+                type: array
+                description: The count of the number of records returned.
+                items:
+                  $ref: '#/definitions/Institution'
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Institution not found"
+
+definitions:
+  Institution:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+        example: "Carnegie Mellon University"
+    xml:
+      name: "Institution"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

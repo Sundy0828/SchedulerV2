@@ -9,6 +9,10 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import { Card, List, Divider, ListItem, ListItemIcon, ListItemText, SwipeableDrawer, Typography, Button, IconButton, Toolbar, AppBar, CardContent } from '@material-ui/core';
 
+import SwaggerUI from "swagger-ui-react"
+import "swagger-ui-react/swagger-ui.css"
+import * as swaggerDocument from './ApiDocs.yaml'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -89,6 +93,15 @@ function App() {
       </List>
       <Divider />
       <List>
+        {['API Documentation'].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
         {['Settings', 'Logout'].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
@@ -114,11 +127,7 @@ function App() {
       </AppBar>
 
       <Card class="app-card">
-        <CardContent>
-        <Button variant="contained" color="primary">
-          Primary
-        </Button>
-        </CardContent>
+        <SwaggerUI url="https://petstore.swagger.io/v2/swagger.json" />
       </Card>
       
       <React.Fragment key={"left"}>
