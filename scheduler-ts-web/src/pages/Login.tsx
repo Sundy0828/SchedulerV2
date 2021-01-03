@@ -3,14 +3,18 @@ import {Formik, Form} from 'Formik';
 import { Box, Button, Center, createStandaloneToast, FormControl, FormLabel,Input, InputGroup, InputRightElement, toast, useToast } from '@chakra-ui/react';
 import { Wrapper } from '../components/Wrapper';
 import { InputField } from '../components/InputField';
+import { useRouter } from "next/router";
+import { API_CONFIG } from '../constants/constants'
+import axios from 'axios';
+
 interface LoginProps {
 
 }
 
 const Login: React.FC<LoginProps> = ({}) => {
+    const router = useRouter();
     const [show, setShow] = React.useState(false);
     const handleClick = () => setShow(!show);
-    const testFunction = () => console.log('test');
     const toast = createStandaloneToast()
     //style={{"backgroundColor": 'blue'}}
 
@@ -22,19 +26,16 @@ const Login: React.FC<LoginProps> = ({}) => {
             <Formik 
                 initialValues={{username: '', password: ''}} 
                 onSubmit={(values,actions) => {
-                    setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2))
-                        toast({
-                            // position: "bottom-right",
-                            title: 'Success',
-                            description: 'Login Successful! Redirecting...',
-                            status: 'success',
-                            duration: 3000,
-                            isClosable: true,
-                          })
-                        actions.setSubmitting(false)
-                        // Redirect To Home
-                    }, 1000)
+                    console.log(values)
+                    axios.post(`http://localhost:3000/dev/Login`, null, { params: {
+                        username: encodeURI('systems@scheduler.com'),
+                        password: encodeURI('test@999')//values.password
+                    }})
+                    .then((response) => {
+                        console.log(response)
+                        console.log(response.status)
+                    })
+                    .catch(err => console.warn(err));
                 }}
             > 
                 {( props) => (
