@@ -1,10 +1,10 @@
-{
+{ 
   "type": "postgres",
   "host": "localhost",
   "port": 5432,
   "username": "postgres",
-  "password": "postgres",
-  "database": "lireddit3",
+  "password": "_;*ce=,]r3WZ~.Nh,+",
+  "database": "scheduler",
   "entities": ["dist/entities/*.js"],
   "migrations": ["dist/migrations/*.js"]
 }
