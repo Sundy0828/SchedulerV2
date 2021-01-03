@@ -6,6 +6,8 @@ provider:
   runtime: nodejs12.x
 
 functions:
+  authorize:
+    handler: core/Gateway.verifyAccess
   # INSTITUTIONS
   getInstitution:
     handler: controllers/Institution.get
@@ -14,6 +16,7 @@ functions:
           path: Institution/{id}
           method: get
           cors: true
+          authorizer: authorize
   getAllInstitutions:
     handler: controllers/Institution.getAll
     events:
@@ -21,6 +24,7 @@ functions:
           path: Institution
           method: get
           cors: true
+          authorizer: authorize
   createInstitution:
     handler: controllers/Institution.create
     events:
@@ -28,6 +32,7 @@ functions:
           path: Institution
           method: post
           cors: true
+          authorizer: authorize
   updateInstitution:
     handler: controllers/Institution.update
     events:
@@ -35,6 +40,7 @@ functions:
           path: Institution/{id}
           method: put
           cors: true
+          authorizer: authorize
   deleteInstitution:
     handler: controllers/Institution.delete
     events:
@@ -42,6 +48,7 @@ functions:
           path: Institution/{id}
           method: delete
           cors: true
+          authorizer: authorize
 
   # USERS
   getUser:
@@ -51,6 +58,7 @@ functions:
           path: User/{id}
           method: get
           cors: true
+          authorizer: authorize
   getAllUsers:
     handler: controllers/User.getAll
     events:
@@ -58,6 +66,7 @@ functions:
           path: User
           method: get
           cors: true
+          authorizer: authorize
   createUser:
     handler: controllers/User.create
     events:
@@ -65,6 +74,7 @@ functions:
           path: User
           method: post
           cors: true
+          authorizer: authorize
   updateUser:
     handler: controllers/User.update
     events:
@@ -72,6 +82,7 @@ functions:
           path: User/{id}
           method: put
           cors: true
+          authorizer: authorize
   deleteUser:
     handler: controllers/User.delete
     events:
@@ -79,6 +90,7 @@ functions:
           path: User/{id}
           method: delete
           cors: true
+          authorizer: authorize
   loginUser:
     handler: controllers/User.login
     events:
@@ -95,6 +107,7 @@ functions:
           path: Capability/{id}
           method: get
           cors: true
+          authorizer: authorize
   getAllCapabilities:
     handler: controllers/Capability.getAll
     events:
@@ -102,6 +115,7 @@ functions:
           path: Capability
           method: get
           cors: true
+          authorizer: authorize
   createCapability:
     handler: controllers/Capability.create
     events:
@@ -109,6 +123,7 @@ functions:
           path: Capability
           method: post
           cors: true
+          authorizer: authorize
   updateCapability:
     handler: controllers/Capability.update
     events:
@@ -116,6 +131,7 @@ functions:
           path: Capability/{id}
           method: put
           cors: true
+          authorizer: authorize
   deleteCapability:
     handler: controllers/Capability.delete
     events:
@@ -123,6 +139,7 @@ functions:
           path: Capability/{id}
           method: delete
           cors: true
+          authorizer: authorize
 
   # USERTYPES
   getUserType:
@@ -132,6 +149,7 @@ functions:
           path: UserType/{id}
           method: get
           cors: true
+          authorizer: authorize
   getAllUserTypes:
     handler: controllers/UserType.getAll
     events:
@@ -139,6 +157,7 @@ functions:
           path: UserType
           method: get
           cors: true
+          authorizer: authorize
   createUserType:
     handler: controllers/UserType.create
     events:
@@ -146,6 +165,7 @@ functions:
           path: UserType
           method: post
           cors: true
+          authorizer: authorize
   updateUserType:
     handler: controllers/UserType.update
     events:
@@ -153,6 +173,7 @@ functions:
           path: UserType/{id}
           method: put
           cors: true
+          authorizer: authorize
   deleteUserType:
     handler: controllers/UserType.delete
     events:
@@ -160,6 +181,7 @@ functions:
           path: UserType/{id}
           method: delete
           cors: true
+          authorizer: authorize
 
   # YEARS
   getYear:
@@ -169,6 +191,7 @@ functions:
           path: Year/{id}
           method: get
           cors: true
+          authorizer: authorize
   getAllYears:
     handler: controllers/Year.getAll
     events:
@@ -176,6 +199,7 @@ functions:
           path: Year
           method: get
           cors: true
+          authorizer: authorize
   createYear:
     handler: controllers/Year.create
     events:
@@ -183,6 +207,7 @@ functions:
           path: Year
           method: post
           cors: true
+          authorizer: authorize
   updateYear:
     handler: controllers/Year.update
     events:
@@ -190,6 +215,7 @@ functions:
           path: Year/{id}
           method: put
           cors: true
+          authorizer: authorize
   deleteYear:
     handler: controllers/Year.delete
     events:
@@ -197,6 +223,7 @@ functions:
           path: Year/{id}
           method: delete
           cors: true
+          authorizer: authorize
 
   # SEMESTERS
   getSemester:
@@ -206,6 +233,7 @@ functions:
           path: Semester/{id}
           method: get
           cors: true
+          authorizer: authorize
   getAllSemesters:
     handler: controllers/Semester.getAll
     events:
@@ -213,6 +241,7 @@ functions:
           path: Semester
           method: get
           cors: true
+          authorizer: authorize
   createSemester:
     handler: controllers/Semester.create
     events:
@@ -220,6 +249,7 @@ functions:
           path: Semester
           method: post
           cors: true
+          authorizer: authorize
   updateSemester:
     handler: controllers/Semester.update
     events:
@@ -227,6 +257,7 @@ functions:
           path: Semester/{id}
           method: put
           cors: true
+          authorizer: authorize
   deleteSemester:
     handler: controllers/Semester.delete
     events:
@@ -234,6 +265,7 @@ functions:
           path: Semester/{id}
           method: delete
           cors: true
+          authorizer: authorize
 
   # UserInstitutionAccess
   # getSemester:
