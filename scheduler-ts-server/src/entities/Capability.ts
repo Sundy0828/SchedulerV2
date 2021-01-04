@@ -8,7 +8,7 @@ import {
 
 import { UserTypeCapabilites  } from "./UserTypeCapabilites";
 
-@ObjectType()
+@ObjectType() 
 @Entity()
 export class Capability extends BaseEntity {
   @Field()
