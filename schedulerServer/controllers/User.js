@@ -286,3 +286,5 @@ async function deleteUserByKey(userKey)
 
     return utility.standardReturn(success, msg)
 }
+
+module.exports = {getUserByKey}

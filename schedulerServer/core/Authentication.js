@@ -7,6 +7,7 @@ router.use(bodyParser.json());
 var jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const utility = require("./Utility");
+const user = require("../controllers/User");
 
 function signJWTToken(userKey)
 {
@@ -22,13 +23,25 @@ function signJWTToken(userKey)
 
 function verifyJWTToken(token)
 {
-    jwt.verify(token, config.JWT_TOKEN, function(err, decoded) {
-        if (err)
+    try {
+        var decoded = jwt.verify(token, config.JWT_TOKEN);
+        // session timed out
+        if (decoded.iat > decoded.exp)
+        {
+            return utility.standardReturn(false, "Session has timed out.");
+        }
+
+        // check if user exists
+        var userInfo = user.getUserByKey(decoded.userKey)
+        if (!userInfo.success || userInfo.rowCount < 1)
         {
             return utility.standardReturn(false, "Failed to authenticate token.");
         }
-        return utility.standardReturn(true, "Successfully verified authentication token.", [decoded]);
-    });
+
+        return utility.standardReturn(true, "Successfully verified authentication token.", {"userKey": decoded.userKey});
+      } catch(err) {
+        return utility.standardReturn(false, "Failed to authenticate token.");
+      }
 }
 
 module.exports = {signJWTToken, verifyJWTToken}

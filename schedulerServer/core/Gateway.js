@@ -5,17 +5,27 @@ const auth = require("./Authentication")
 
 // verify token
 module.exports.verifyAccess = async (event, context, callback) => {
-    console.log(event)
-    context.succeed(generatePolicy('user', 'Allow', event.methodArn));
-    callback(null, generatePolicy('user', 'Allow', event.methodArn));
-//     var token = event.authorizationToken;
-//     if (token.startsWith("Bearer ")){
-//         token = token.substring(7, token.length);
-//    } else {
-//         // error
-//    }
-//     var loginInfo = await auth.verifyJWTToken(token)
-//     console.log(loginInfo)
+    var token = event.authorizationToken;
+    // check for bearer token
+    if (token.startsWith("Bearer "))
+    {
+        token = token.substring(7, token.length);
+    } 
+    else 
+    {
+        // error
+    }
+    
+    // verify token
+    var loginInfo = auth.verifyJWTToken(token)
+    if (!loginInfo.success)
+    {
+        // return 401 error
+    }
+    else
+    {
+        // return 200
+    }
 }
 
 // Help function to generate an IAM policy

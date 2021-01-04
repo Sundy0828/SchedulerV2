@@ -29,7 +29,7 @@ function standardReturn(success, msg = "", data, count = 0, selectOne = false)
 
     if (count)
     {
-        singleReturn.count = count;
+        singleReturn.rowCount = count;
     }
 
     return singleReturn;
