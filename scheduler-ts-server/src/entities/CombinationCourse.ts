@@ -9,7 +9,7 @@ import {
 @ObjectType()
 @Entity()
 export class CombinationCourse extends BaseEntity {
-  @Field()
+  @Field() 
   @PrimaryGeneratedColumn()
   combination_id!: number;
 

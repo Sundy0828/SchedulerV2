@@ -6,7 +6,7 @@ import {
   BaseEntity,
 } from "typeorm";
 
-@ObjectType()
+@ObjectType() 
 @Entity()
 export class Discipline extends BaseEntity {
   @Field()

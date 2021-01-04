@@ -13,29 +13,29 @@ import {
     UseMiddleware,
   } from "type-graphql";
   import { getConnection } from "typeorm";
-  import { Capability } from "../entities/Capability";
+  import { Combination } from "../entities/Combination";
   import { isAuth } from "../middleware/isAuth";
   import { MyContext } from "../types";
   
   @InputType()
-  class CapabilityInput {
+  class CombinationInput {
     @Field()
-    name: string;
+    logical_operator: string;
   }
   
   @ObjectType()
-  class PaginatedCapabilities {
-    @Field(() => [Capability])
-    capabilities: Capability[];
+  class PaginatedCombinations {
+    @Field(() => [Combination])
+    combinations: Combination[];
     @Field()
     hasMore: boolean;
   }
   
-  @Resolver(Capability)
-  export class CapabilityResolver {
+  @Resolver(Combination)
+  export class CombinationResolver {
     @FieldResolver(() => String)
-    textSnippet(@Root() capability: Capability) {
-      return capability.name.slice(0, 50);
+    textSnippet(@Root() capability: Combination) {
+      return capability.logical_operator.slice(0, 50);
     }
   
     // @FieldResolver(() => User)
@@ -43,11 +43,11 @@ import {
     //   return userLoader.load(year.creatorId);
     // }
   
-    @Query(() => PaginatedCapabilities)
+    @Query(() => PaginatedCombinations)
     async years(
       @Arg("limit", () => Int) limit: number,
       @Arg("cursor", () => String, { nullable: true }) cursor: string | null
-    ): Promise<PaginatedCapabilities> {
+    ): Promise<PaginatedCombinations> {
       // 20 -> 21
       const realLimit = Math.min(50, limit);
       const reaLimitPlusOne = realLimit + 1;
@@ -58,7 +58,7 @@ import {
         replacements.push(new Date(parseInt(cursor)));
       }
   
-      const capabilities = await getConnection().query(
+      const combinations = await getConnection().query(
         // `
         // select y.*
         // from years y
@@ -68,7 +68,7 @@ import {
         // `,
         `
         select c.*
-        from capabilities c
+        from combinations c
         limit $1
         `,
         replacements
@@ -91,42 +91,42 @@ import {
       // console.log("posts: ", posts);
   
       return {
-        capabilities: capabilities.slice(0, realLimit),
-        hasMore: capabilities.length === reaLimitPlusOne,
+        combinations: combinations.slice(0, realLimit),
+        hasMore: combinations.length === reaLimitPlusOne,
       };
     }
   
-    @Query(() => Capability, { nullable: true })
-    post(@Arg("capability_id", () => Int) capability_id: number): Promise<Capability | undefined> {
-      return Capability.findOne(capability_id);
+    @Query(() => Combination, { nullable: true })
+    post(@Arg("combination_id", () => Int) capability_id: number): Promise<Combination | undefined> {
+      return Combination.findOne(capability_id);
     }
   
-    @Mutation(() => Capability)
+    @Mutation(() => Combination)
     @UseMiddleware(isAuth)
-    async createCapability(
-      @Arg("input") input: CapabilityInput,
+    async createCombination(
+      @Arg("input") input: CombinationInput,
       @Ctx() { req }: MyContext
-    ): Promise<Capability> {
-      return Capability.create({
+    ): Promise<Combination> {
+      return Combination.create({
         ...input
         // ,
         // creatorId: req.session.userId,
       }).save();
     }
   
-    @Mutation(() => Capability, { nullable: true })
+    @Mutation(() => Combination, { nullable: true })
     @UseMiddleware(isAuth)
-    async updateCapability(
-      @Arg("capability_id", () => Int) year_id: number,
-      @Arg("name") name: string,
+    async updateCombination(
+      @Arg("combination_id", () => Int) combination_id: number,
+      @Arg("logical_operator") logical_operator: string,
       @Ctx() { req }: MyContext
-    ): Promise<Capability | null> {
+    ): Promise<Combination | null> {
       const result = await getConnection()
         .createQueryBuilder()
-        .update(Capability)
-        .set({ name })
-        .where('capability_id = :id'/*and "creatorId" = :creatorId'*/, {
-          year_id
+        .update(Combination)
+        .set({ logical_operator })
+        .where('combination_id = :id'/*and "creatorId" = :creatorId'*/, {
+          combination_id
         //   ,
         //   creatorId: req.session.userId,
         })
@@ -138,8 +138,8 @@ import {
   
     @Mutation(() => Boolean)
     @UseMiddleware(isAuth)
-    async deleteCapability(
-      @Arg("capability_id", () => Int) capability_id: number,
+    async deleteCombination(
+      @Arg("combination_id", () => Int) combination_id: number,
       @Ctx() { req }: MyContext
     ): Promise<boolean> {
       // not cascade way
@@ -154,7 +154,7 @@ import {
       // await Updoot.delete({ postId: id });
       // await Post.delete({ id });
   
-      await Capability.delete({ capability_id /*, creatorId: req.session.userId*/ });
+      await Combination.delete({ combination_id /*, creatorId: req.session.userId*/ });
       return true;
     }
   }

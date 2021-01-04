@@ -11,7 +11,7 @@ import {
 export class DisciplineCourse extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
-  discipline_id!: number;
+  discipline_id!: number; 
 
   @Field()
   @Column()

@@ -23,9 +23,6 @@ export class Semester extends BaseEntity {
   @Column()
   institution_id!: number;
 
-  @OneToMany(() => Institution, (institution) => institution.name)
-  institutions: Institution[];
-
 // Should add these
 //   @Field()
 //   @Column()

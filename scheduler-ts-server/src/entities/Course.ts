@@ -14,7 +14,7 @@ export class Course extends BaseEntity {
   course_id!: number;
 
   @Field()
-  @Column()
+  @Column() 
   prequisite_combination_id!: number;
 
   @Field()
