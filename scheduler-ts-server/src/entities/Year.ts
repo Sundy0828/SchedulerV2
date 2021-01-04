@@ -3,10 +3,8 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  BaseEntity,
-  OneToMany
+  BaseEntity
 } from "typeorm";
-import {Institution} from './Institution';
 
 @ObjectType()
 @Entity()
@@ -19,8 +17,9 @@ export class Year extends BaseEntity {
   @Column()
   name!: string;
 
-  @OneToMany(() => Institution, (institution) => institution.name)
-  institutions: Institution[];
+  @Field()
+  @Column()
+  institution_id!: number;
 
 // Should add these
 //   @Field()

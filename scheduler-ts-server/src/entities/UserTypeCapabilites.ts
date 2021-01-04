@@ -17,7 +17,6 @@ export class UserTypeCapabilites extends BaseEntity {
   @Column()
   capability_id!: number;
 
-
 // Should add these
 //   @Field()
 //   @Column()
