@@ -1,3 +1,4 @@
+
 # Scheduler
 A repository for a scheduler application that allows users to find the classes for the rest of their school year based off of their major, courses taken, and more. Available for iOS, android and Web Apps.
 
@@ -10,6 +11,7 @@ Database: Postgresql
 
 
 ## Installation
+### Backend
 
 Use the package manager [npm](https://nodejs.org/en/download/) to install required node modules for schedulerServer.
 
@@ -17,10 +19,10 @@ Use the package manager [npm](https://nodejs.org/en/download/) to install requir
 npm install
 ```
 
-## Usage
+#### Usage
 create config.js file under schedulerServer/config/
 
-```nodejs
+```js
 module.exports =  {
     DATABASE: 'Database Name',
     HOST: 'Host URL',
@@ -37,6 +39,22 @@ start up serverless environment from schedulerServer directory
 
 ```bash
 serverless offline
+```
+
+### Frontend
+
+Use the package manager [npm](https://nodejs.org/en/download/) to install required node modules for schedulerWeb.
+
+```bash
+npm install
+npm install -g yarn
+```
+
+#### Usage
+start up react environment from schedulerWeb directory
+
+```bash
+yarn dev
 ```
 
 ## Contributing

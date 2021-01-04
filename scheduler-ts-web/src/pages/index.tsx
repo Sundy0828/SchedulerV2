@@ -3,6 +3,7 @@ import React from "react"
 import Drawer from "../components/Drawer"
 import { Home } from "./Home";
 import Login from "./Login";
+import { ApiDocs } from "./ApiDocs";
 import Register from "./register";
 
 const Index = () => {
