@@ -11,7 +11,7 @@ const Index = () => {
   const isLoggedIn = true;
 
   if (isLoggedIn) {
-    openingComponent = <ApiDocs/>;
+    openingComponent = <Login/>;
   } else {
     openingComponent = <Home/>;
   }
