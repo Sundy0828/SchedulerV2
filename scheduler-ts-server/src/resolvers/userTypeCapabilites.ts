@@ -45,7 +45,7 @@ export class UserTypeCapabilitesResolver {
   // }
 
   @Query(() => PaginatedUserTypeCapabilites)
-  async years(
+  async userTypeCapabilites(
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null
   ): Promise<PaginatedUserTypeCapabilites> {

@@ -44,7 +44,7 @@ export class UserInstitutionAccessResolver {
   // }
 
   @Query(() => PaginatedUserInstitutionAccesses)
-  async years(
+  async userInstitutionAccesses(
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null
   ): Promise<PaginatedUserInstitutionAccesses> {

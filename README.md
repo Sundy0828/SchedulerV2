@@ -49,3 +49,11 @@ https://typeorm.io/#/
 
 npm install typeorm -g
 npm install reflect-metadata --save
+
+
+To Start TS Web and TS Server projects 
+run Yarn Dev
+
+Once the server is running you can go to 
+http://localhost:4000/graphql 
+to run custom queries

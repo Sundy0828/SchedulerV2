@@ -48,7 +48,7 @@ export class InstitutionResolver {
   // }
 
   @Query(() => PaginatedInstitutions)
-  async years(
+  async institutions(
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null
   ): Promise<PaginatedInstitutions> {

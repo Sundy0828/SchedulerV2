@@ -44,7 +44,7 @@ import {
     // }
   
     @Query(() => PaginatedCombinations)
-    async years(
+    async combinations(
       @Arg("limit", () => Int) limit: number,
       @Arg("cursor", () => String, { nullable: true }) cursor: string | null
     ): Promise<PaginatedCombinations> {

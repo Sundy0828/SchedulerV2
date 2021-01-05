@@ -49,7 +49,7 @@ export class PaginatedCourseResolver {
   // }
 
   @Query(() => PaginatedCourses)
-  async years(
+  async courses(
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null
   ): Promise<PaginatedCourses> {

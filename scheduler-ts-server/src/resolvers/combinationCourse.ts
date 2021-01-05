@@ -47,7 +47,7 @@ import {
     // }
   
     @Query(() => PaginatedCombinationCourses)
-    async years(
+    async combinationCourses(
       @Arg("limit", () => Int) limit: number,
       @Arg("cursor", () => String, { nullable: true }) cursor: string | null
     ): Promise<PaginatedCombinationCourses> {

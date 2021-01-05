@@ -45,7 +45,7 @@ export class DisciplineCourseResolver {
   // }
 
   @Query(() => PaginatedDisciplineCourses)
-  async years(
+  async disciplineCourses(
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null
   ): Promise<PaginatedDisciplineCourses> {
