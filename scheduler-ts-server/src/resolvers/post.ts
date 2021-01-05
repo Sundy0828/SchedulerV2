@@ -52,13 +52,14 @@ export class PostResolver {
     @Root() post: Post,
     @Ctx() { updootLoader, req }: MyContext
   ) {
-    if (!req.session.userId) {
+    console.log(req)
+    if (5 == 5/*!req.session.userId*/) {
       return null;
     }
 
     const updoot = await updootLoader.load({
       postId: post.id,
-      userId: req.session.userId,
+      userId: 1//req.session.userId,
     });
 
     return updoot ? updoot.value : null;
@@ -71,10 +72,11 @@ export class PostResolver {
     @Arg("value", () => Int) value: number,
     @Ctx() { req }: MyContext
   ) {
+    console.log(req)
     const isUpdoot = value !== -1;
     const realValue = isUpdoot ? 1 : -1;
-    const { userId } = req.session;
-
+    //const { userId } = req.session;
+    const userId = 1;
     const updoot = await Updoot.findOne({ where: { postId, userId } });
 
     // the user has voted on the post before
@@ -182,9 +184,10 @@ export class PostResolver {
     @Arg("input") input: PostInput,
     @Ctx() { req }: MyContext
   ): Promise<Post> {
+    console.log(req)
     return Post.create({
       ...input,
-      creatorId: req.session.userId,
+      creatorId: 1//req.session.userId,
     }).save();
   }
 
@@ -196,13 +199,14 @@ export class PostResolver {
     @Arg("text") text: string,
     @Ctx() { req }: MyContext
   ): Promise<Post | null> {
+    console.log(req)
     const result = await getConnection()
       .createQueryBuilder()
       .update(Post)
       .set({ title, text })
       .where('id = :id and "creatorId" = :creatorId', {
         id,
-        creatorId: req.session.userId,
+        creatorId: 1//req.session.userId,
       })
       .returning("*")
       .execute();
@@ -216,6 +220,7 @@ export class PostResolver {
     @Arg("id", () => Int) id: number,
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
+    console.log(req)
     // not cascade way
     // const post = await Post.findOne(id);
     // if (!post) {
@@ -228,7 +233,7 @@ export class PostResolver {
     // await Updoot.delete({ postId: id });
     // await Post.delete({ id });
 
-    await Post.delete({ id, creatorId: req.session.userId });
+    await Post.delete({ id, creatorId: 1/*req.session.userId */});
     return true;
   }
 }

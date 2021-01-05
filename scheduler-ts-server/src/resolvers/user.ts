@@ -12,7 +12,7 @@ import {
 import { MyContext } from "../types";
 import { User } from "../entities/User";
 import argon2 from "argon2";
-import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
+import { /*COOKIE_NAME,*/ FORGET_PASSWORD_PREFIX } from "../constants";
 import { UsernamePasswordInput } from "./UsernamePasswordInput";
 import { validateRegister } from "../utils/validateRegister";
 import { sendEmail } from "../utils/sendEmail";
@@ -40,8 +40,9 @@ class UserResponse {
 export class UserResolver {
   @FieldResolver(() => String)
   email(@Root() user: User, @Ctx() { req }: MyContext) {
+    console.log(req)
     // this is the current user and its ok to show them their own email
-    if (req.session.userId === user.id) {
+    if (/*req.session.userId === user.id*/ 1=== user.id) {
       return user.email;
     }
     // current user wants to see someone elses email
@@ -54,6 +55,7 @@ export class UserResolver {
     @Arg("newPassword") newPassword: string,
     @Ctx() { redis, req }: MyContext
   ): Promise<UserResponse> {
+    console.log(req)
     if (newPassword.length <= 2) {
       return {
         errors: [
@@ -102,7 +104,7 @@ export class UserResolver {
     await redis.del(key);
 
     // log in user after change password
-    req.session.userId = user.id;
+    //req.session.userId = user.id;
 
     return { user };
   }
@@ -137,12 +139,13 @@ export class UserResolver {
 
   @Query(() => User, { nullable: true })
   me(@Ctx() { req }: MyContext) {
+    console.log(req)
     // you are not logged in
-    if (!req.session.userId) {
+    if (1==1/*!req.session.userId*/) {
       return null;
     }
 
-    return User.findOne(req.session.userId);
+    return User.findOne(1/*req.session.userId*/);
   }
 
   @Mutation(() => UserResponse)
@@ -150,6 +153,7 @@ export class UserResolver {
     @Arg("options") options: UsernamePasswordInput,
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
+    console.log(req)
     const errors = validateRegister(options);
     if (errors) {
       return { errors };
@@ -189,7 +193,7 @@ export class UserResolver {
     // store user id session
     // this will set a cookie on the user
     // keep them logged in
-    req.session.userId = user.id;
+    //req.session.userId = user.id;
 
     return { user };
   }
@@ -200,6 +204,7 @@ export class UserResolver {
     @Arg("password") password: string,
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
+    console.log(req)
     const user = await User.findOne(
       usernameOrEmail.includes("@")
         ? { where: { email: usernameOrEmail } }
@@ -227,7 +232,7 @@ export class UserResolver {
       };
     }
 
-    req.session.userId = user.id;
+    //req.session.userId = user.id;
 
     return {
       user,
@@ -237,16 +242,21 @@ export class UserResolver {
   @Mutation(() => Boolean)
   logout(@Ctx() { req, res }: MyContext) {
     return new Promise((resolve) =>
-      req.session.destroy((err) => {
-        res.clearCookie(COOKIE_NAME);
-        if (err) {
-          console.log(err);
-          resolve(false);
-          return;
-        }
+      // req.session.destroy((err) => {
+      //   res.clearCookie(COOKIE_NAME);
+      //   if (err) {
+      //     console.log(err);
+      //     resolve(false);
+      //     return;
+      //   }
 
-        resolve(true);
-      })
+      //   resolve(true);
+      // })
+      () => {
+        console.log(req,res)
+        resolve(true)
+      }
+      
     );
   }
 }

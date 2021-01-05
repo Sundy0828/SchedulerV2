@@ -12,12 +12,13 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
 import { createConnection } from "typeorm";
-import { Post } from "./entities/Post";
-import { User } from "./entities/User";
-import path from "path";
-import { Updoot } from "./entities/Updoot";
+//import { Post } from "./entities/Post";
+//import { User } from "./entities/User";
+//import path from "path";
+//import { Updoot } from "./entities/Updoot";
 import { createUserLoader } from "./utils/createUserLoader";
 import { createUpdootLoader } from "./utils/createUpdootLoader";
+import { Institution } from "./entities/Institution";
 
 const main = async () => {
   const conn = await createConnection({
@@ -25,12 +26,17 @@ const main = async () => {
     url: process.env.DATABASE_URL,
     logging: true,
     // synchronize: true,
-    migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [Post, User, Updoot],
+    //migrations: [path.join(__dirname, "./migrations/*")],
+    entities: [Institution],
+    host: "localhost",
+    port: 5432,
+    username: "postgres",
+    password: "_;*ce=,]r3WZ~.Nh,+",
+    database: "scheduler",
   });
-  // await conn.runMigrations();
-
-  // await Post.delete({});
+  //await conn.runMigrations();
+  conn.connect();
+  //await Post.delete({});
 
   const app = express();
 
@@ -55,10 +61,10 @@ const main = async () => {
         httpOnly: true,
         sameSite: "lax", // csrf
         secure: __prod__, // cookie only works in https
-        domain: __prod__ ? ".codeponder.com" : undefined,
+        domain: __prod__ ? ".codeponder.com" : undefined, // Need to change this 1st value
       },
       saveUninitialized: false,
-      secret: process.env.SESSION_SECRET,
+      secret: 'test'/*process.env.SESSION_SECRET*/,
       resave: false,
     })
   );
@@ -82,9 +88,9 @@ const main = async () => {
     cors: false,
   });
 
-  app.listen(parseInt(process.env.PORT), () => {
-    console.log("server started on localhost:4000");
-  });
+  app.listen(4000, () => { /*parseInt(process.env.PORT*/
+    console.log(`server started on localhost:4000`)
+  })
 };
 
 main().catch((err) => {
