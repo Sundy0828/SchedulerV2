@@ -23,19 +23,20 @@ import { Institution } from "./entities/Institution";
 const main = async () => {
   const conn = await createConnection({
     type: "postgres",
-    url: process.env.DATABASE_URL,
+    //url: process.env.DATABASE_URL,
     logging: true,
     // synchronize: true,
     //migrations: [path.join(__dirname, "./migrations/*")],
     entities: [Institution],
-    host: "localhost",
+    host: "",  
     port: 5432,
-    username: "postgres",
-    password: "_;*ce=,]r3WZ~.Nh,+",
-    database: "scheduler",
+    username: "", // add config values here
+    password: "",
+    database: "",
   });
+  console.log(conn)
   //await conn.runMigrations();
-  conn.connect();
+  //conn.connect();
   //await Post.delete({});
 
   const app = express();
