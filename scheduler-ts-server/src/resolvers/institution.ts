@@ -140,7 +140,7 @@ export class InstitutionResolver {
 
   @Mutation(() => Institutions)
   @UseMiddleware(isAuth)
-  async createCombination(
+  async createInstitution(
     @Arg("input") input: InstitutionInput,
     @Ctx() { req }: MyContext
   ): Promise<Institutions> {

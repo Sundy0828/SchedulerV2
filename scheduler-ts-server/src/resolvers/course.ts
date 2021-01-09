@@ -112,6 +112,7 @@ export class PaginatedCourseResolver {
     @Arg("input") input: CourseInput,
     @Ctx() { req }: MyContext
   ): Promise<Courses> {
+    console.log(req)
     return Courses.create({
       ...input
       // ,
@@ -131,6 +132,7 @@ export class PaginatedCourseResolver {
     @Arg("years_available") years_available: number,
     @Ctx() { req }: MyContext
   ): Promise<Courses | null> {
+    console.log(req)
     const result = await getConnection()
       .createQueryBuilder()
       .update(Courses)
