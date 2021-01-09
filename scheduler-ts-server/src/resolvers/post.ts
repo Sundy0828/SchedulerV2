@@ -15,7 +15,7 @@ import {
 import { getConnection } from "typeorm";
 import { Post } from "../entities/Post";
 import { Updoot } from "../entities/Updoot";
-import { User } from "../entities/User";
+import { Users } from "../entities/Users";
 import { isAuth } from "../middleware/isAuth";
 import { MyContext } from "../types";
 
@@ -42,7 +42,7 @@ export class PostResolver {
     return post.text.slice(0, 50);
   }
 
-  @FieldResolver(() => User)
+  @FieldResolver(() => Users)
   creator(@Root() post: Post, @Ctx() { userLoader }: MyContext) {
     return userLoader.load(post.creatorId);
   }

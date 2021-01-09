@@ -35,6 +35,7 @@ class PaginatedUserTypeCapabilites {
 export class UserTypeCapabilitesResolver {
   @FieldResolver(() => String)
   textSnippet(@Root() userTypeCapabilites: User_Type_Capabilites) {
+    console.log(userTypeCapabilites)
     return;
     //return userTypeCapabilites.capability_id.slice(0, 50);
   }
@@ -108,6 +109,7 @@ export class UserTypeCapabilitesResolver {
     @Arg("input") input: UserTypeCapabilitesInput,
     @Ctx() { req }: MyContext
   ): Promise<User_Type_Capabilites> {
+    console.log(req)
     return User_Type_Capabilites.create({
       ...input
       // ,
@@ -122,6 +124,7 @@ export class UserTypeCapabilitesResolver {
     @Arg("capability_id") capability_id: number,
     @Ctx() { req }: MyContext
   ): Promise<User_Type_Capabilites | null> {
+    console.log(req)
     const result = await getConnection()
       .createQueryBuilder()
       .update(User_Type_Capabilites)
@@ -143,6 +146,7 @@ export class UserTypeCapabilitesResolver {
     @Arg("user_type_id", () => Int) user_type_id: number,
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
+    console.log(req)
     // not cascade way
     // const post = await Post.findOne(id);
     // if (!post) {
