@@ -6,17 +6,20 @@ import {
   BaseEntity,
 } from "typeorm";
 
-@ObjectType()
+import { User_Type_Capabilites  } from "./User_Type_Capabilites";
+
+@ObjectType() 
 @Entity()
-export class UserInstitutionAccess extends BaseEntity {
+export class Capabilities extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
-  user_id!: number;
+  capability_id!: number;
 
   @Field()
   @Column()
-  institution_id!: number;
+  name!: string;
 
+  userTypeCapabilites:User_Type_Capabilites;
 
 // Should add these
 //   @Field()

@@ -6,20 +6,36 @@ import {
   BaseEntity,
 } from "typeorm";
 
-import { UserTypeCapabilites  } from "./UserTypeCapabilites";
-
-@ObjectType() 
+@ObjectType()
 @Entity()
-export class Capability extends BaseEntity {
+export class Courses extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
-  capability_id!: number;
+  course_id!: number;
+
+  @Field()
+  @Column() 
+  prequisite_combination_id!: number;
 
   @Field()
   @Column()
   name!: string;
 
-  userTypeCapabilites:UserTypeCapabilites;
+  @Field()
+  @Column()
+  credits!: number;
+
+  @Field()
+  @Column()
+  code!: number;
+
+  @Field()
+  @Column()
+  semester_available!: number;
+
+  @Field()
+  @Column()
+  years_available!: number;
 
 // Should add these
 //   @Field()

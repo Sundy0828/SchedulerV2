@@ -13,7 +13,7 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
-import { Discipline } from "../entities/Discipline";
+import { Disciplines } from "../entities/Disciplines";
 import { isAuth } from "../middleware/isAuth";
 import { MyContext } from "../types";
 
@@ -29,16 +29,16 @@ class DisciplineInput {
 
 @ObjectType()
 class PaginatedDisciplines {
-  @Field(() => [Discipline])
-  disciplines: Discipline[];
+  @Field(() => [Disciplines])
+  disciplines: Disciplines[];
   @Field()
   hasMore: boolean;
 }
 
-@Resolver(Discipline)
+@Resolver(Disciplines)
 export class DisciplineResolver {
   @FieldResolver(() => String)
-  textSnippet(@Root() discipline: Discipline) {
+  textSnippet(@Root() discipline: Disciplines) {
     return discipline.name.slice(0, 50);
   }
 
@@ -100,25 +100,26 @@ export class DisciplineResolver {
     };
   }
 
-  @Query(() => Discipline, { nullable: true })
-  post(@Arg("discipline_id", () => Int) capability_id: number): Promise<Discipline | undefined> {
-    return Discipline.findOne(capability_id);
+  @Query(() => Disciplines, { nullable: true })
+  post(@Arg("discipline_id", () => Int) capability_id: number): Promise<Disciplines | undefined> {
+    return Disciplines.findOne(capability_id);
   }
 
-  @Mutation(() => Discipline)
+  @Mutation(() => Disciplines)
   @UseMiddleware(isAuth)
   async createDiscipline(
     @Arg("input") input: DisciplineInput,
     @Ctx() { req }: MyContext
-  ): Promise<Discipline> {
-    return Discipline.create({
+  ): Promise<Disciplines> {
+    console.log(req)
+    return Disciplines.create({
       ...input
       // ,
       // creatorId: req.session.userId,
     }).save();
   }
 
-  @Mutation(() => Discipline, { nullable: true })
+  @Mutation(() => Disciplines, { nullable: true })
   @UseMiddleware(isAuth)
   async updateDiscipline(
     @Arg("discipline_id", () => Int) discipline_id: number,
@@ -126,10 +127,11 @@ export class DisciplineResolver {
     @Arg("name") name: string,
     @Arg("is_major") is_major: boolean,
     @Ctx() { req }: MyContext
-  ): Promise<Discipline | null> {
+  ): Promise<Disciplines | null> {
+    console.log(req)
     const result = await getConnection()
       .createQueryBuilder()
-      .update(Discipline)
+      .update(Disciplines)
       .set({ institution_id,name,is_major })
       .where('discipline_id = :id'/*and "creatorId" = :creatorId'*/, {
         discipline_id
@@ -148,6 +150,7 @@ export class DisciplineResolver {
     @Arg("discipline_id", () => Int) discipline_id: number,
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
+    console.log(req)
     // not cascade way
     // const post = await Post.findOne(id);
     // if (!post) {
@@ -160,7 +163,7 @@ export class DisciplineResolver {
     // await Updoot.delete({ postId: id });
     // await Post.delete({ id });
 
-    await Discipline.delete({ discipline_id /*, creatorId: req.session.userId*/ });
+    await Disciplines.delete({ discipline_id /*, creatorId: req.session.userId*/ });
     return true;
   }
 }

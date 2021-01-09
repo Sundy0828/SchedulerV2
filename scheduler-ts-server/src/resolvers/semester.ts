@@ -13,7 +13,7 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
-import { Semester } from "../entities/Semester";
+import { Semesters } from "../entities/Semesters";
 import { isAuth } from "../middleware/isAuth";
 import { MyContext } from "../types";
 
@@ -27,16 +27,16 @@ class SemesterInput {
 
 @ObjectType()
 class PaginatedSemesters {
-  @Field(() => [Semester])
-  semesters: Semester[];
+  @Field(() => [Semesters])
+  semesters: Semesters[];
   @Field()
   hasMore: boolean;
 }
 
-@Resolver(Semester)
+@Resolver(Semesters)
 export class SemesterResolver {
   @FieldResolver(() => String)
-  textSnippet(@Root() semester: Semester) {
+  textSnippet(@Root() semester: Semesters) {
     return semester.name.slice(0, 50);
   }
 
@@ -98,35 +98,37 @@ export class SemesterResolver {
     };
   }
 
-  @Query(() => Semester, { nullable: true })
-  post(@Arg("semester_id", () => Int) semester_id: number): Promise<Semester | undefined> {
-    return Semester.findOne(semester_id);
+  @Query(() => Semesters, { nullable: true })
+  post(@Arg("semester_id", () => Int) semester_id: number): Promise<Semesters | undefined> {
+    return Semesters.findOne(semester_id);
   }
 
-  @Mutation(() => Semester)
+  @Mutation(() => Semesters)
   @UseMiddleware(isAuth)
   async createSemester(
     @Arg("input") input: SemesterInput,
     @Ctx() { req }: MyContext
-  ): Promise<Semester> {
-    return Semester.create({
+  ): Promise<Semesters> {
+    console.log(req)
+    return Semesters.create({
       ...input
       // ,
       // creatorId: req.session.userId,
     }).save();
   }
 
-  @Mutation(() => Semester, { nullable: true })
+  @Mutation(() => Semesters, { nullable: true })
   @UseMiddleware(isAuth)
   async updateSemester(
     @Arg("semester_id", () => Int) semester_id: number,
     @Arg("name") name: string,
     @Arg("institution_id") institution_id: string,
     @Ctx() { req }: MyContext
-  ): Promise<Semester | null> {
+  ): Promise<Semesters | null> {
+    console.log(req,institution_id)
     const result = await getConnection()
       .createQueryBuilder()
-      .update(Semester)
+      .update(Semesters)
       .set({ name })
       .where('semester_id = :id'/*and "creatorId" = :creatorId'*/, {
         semester_id
@@ -145,6 +147,7 @@ export class SemesterResolver {
     @Arg("semester_id", () => Int) semester_id: number,
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
+    console.log(req)
     // not cascade way
     // const post = await Post.findOne(id);
     // if (!post) {
@@ -157,7 +160,7 @@ export class SemesterResolver {
     // await Updoot.delete({ postId: id });
     // await Post.delete({ id });
 
-    await Semester.delete({ semester_id /*, creatorId: req.session.userId*/ });
+    await Semesters.delete({ semester_id /*, creatorId: req.session.userId*/ });
     return true;
   }
 }

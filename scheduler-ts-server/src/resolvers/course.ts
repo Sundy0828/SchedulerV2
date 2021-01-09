@@ -13,7 +13,7 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
-import { Course } from "../entities/Course";
+import { Courses } from "../entities/Courses";
 import { isAuth } from "../middleware/isAuth";
 import { MyContext } from "../types";
 
@@ -30,16 +30,16 @@ class CourseInput {
 
 @ObjectType()
 class PaginatedCourses {
-  @Field(() => [Course])
-  courses: Course[];
+  @Field(() => [Courses])
+  courses: Courses[];
   @Field()
   hasMore: boolean;
 }
 
-@Resolver(Course)
+@Resolver(Courses)
 export class PaginatedCourseResolver {
   @FieldResolver(() => String)
-  textSnippet(@Root() course: Course) {
+  textSnippet(@Root() course: Courses) {
     return course.name.slice(0, 50);
   }
 
@@ -101,25 +101,25 @@ export class PaginatedCourseResolver {
     };
   }
 
-  @Query(() => Course, { nullable: true })
-  post(@Arg("combination_id", () => Int) capability_id: number): Promise<Course | undefined> {
-    return Course.findOne(capability_id);
+  @Query(() => Courses, { nullable: true })
+  post(@Arg("combination_id", () => Int) capability_id: number): Promise<Courses | undefined> {
+    return Courses.findOne(capability_id);
   }
 
-  @Mutation(() => Course)
+  @Mutation(() => Courses)
   @UseMiddleware(isAuth)
   async createCourse(
     @Arg("input") input: CourseInput,
     @Ctx() { req }: MyContext
-  ): Promise<Course> {
-    return Course.create({
+  ): Promise<Courses> {
+    return Courses.create({
       ...input
       // ,
       // creatorId: req.session.userId,
     }).save();
   }
 
-  @Mutation(() => Course, { nullable: true })
+  @Mutation(() => Courses, { nullable: true })
   @UseMiddleware(isAuth)
   async updateCourse(
     @Arg("course_id", () => Int) course_id: number,
@@ -130,10 +130,10 @@ export class PaginatedCourseResolver {
     @Arg("semester_available") semester_available: number,
     @Arg("years_available") years_available: number,
     @Ctx() { req }: MyContext
-  ): Promise<Course | null> {
+  ): Promise<Courses | null> {
     const result = await getConnection()
       .createQueryBuilder()
-      .update(Course)
+      .update(Courses)
       .set({ prequisite_combination_id,name,credits,code,semester_available,years_available })
       .where('course_id = :id'/*and "creatorId" = :creatorId'*/, {
         course_id
@@ -152,6 +152,7 @@ export class PaginatedCourseResolver {
     @Arg("course_id", () => Int) course_id: number,
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
+    console.log(req)
     // not cascade way
     // const post = await Post.findOne(id);
     // if (!post) {
@@ -164,7 +165,7 @@ export class PaginatedCourseResolver {
     // await Updoot.delete({ postId: id });
     // await Post.delete({ id });
 
-    await Course.delete({ course_id /*, creatorId: req.session.userId*/ });
+    await Courses.delete({ course_id /*, creatorId: req.session.userId*/ });
     return true;
   }
 }

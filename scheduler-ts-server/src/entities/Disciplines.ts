@@ -8,7 +8,7 @@ import {
 
 @ObjectType() 
 @Entity()
-export class Discipline extends BaseEntity {
+export class Disciplines extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   discipline_id!: number;

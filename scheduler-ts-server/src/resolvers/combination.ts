@@ -13,7 +13,7 @@ import {
     UseMiddleware,
   } from "type-graphql";
   import { getConnection } from "typeorm";
-  import { Combination } from "../entities/Combination";
+  import { Combinations } from "../entities/Combinations";
   import { isAuth } from "../middleware/isAuth";
   import { MyContext } from "../types";
   
@@ -25,16 +25,16 @@ import {
   
   @ObjectType()
   class PaginatedCombinations {
-    @Field(() => [Combination])
-    combinations: Combination[];
+    @Field(() => [Combinations])
+    combinations: Combinations[];
     @Field()
     hasMore: boolean;
   }
   
-  @Resolver(Combination)
+  @Resolver(Combinations)
   export class CombinationResolver {
     @FieldResolver(() => String)
-    textSnippet(@Root() capability: Combination) {
+    textSnippet(@Root() capability: Combinations) {
       return capability.logical_operator.slice(0, 50);
     }
   
@@ -96,34 +96,36 @@ import {
       };
     }
   
-    @Query(() => Combination, { nullable: true })
-    post(@Arg("combination_id", () => Int) capability_id: number): Promise<Combination | undefined> {
-      return Combination.findOne(capability_id);
+    @Query(() => Combinations, { nullable: true })
+    post(@Arg("combination_id", () => Int) capability_id: number): Promise<Combinations | undefined> {
+      return Combinations.findOne(capability_id);
     }
   
-    @Mutation(() => Combination)
+    @Mutation(() => Combinations)
     @UseMiddleware(isAuth)
     async createCombination(
       @Arg("input") input: CombinationInput,
       @Ctx() { req }: MyContext
-    ): Promise<Combination> {
-      return Combination.create({
+    ): Promise<Combinations> {
+      console.log(req)
+      return Combinations.create({
         ...input
         // ,
         // creatorId: req.session.userId,
       }).save();
     }
   
-    @Mutation(() => Combination, { nullable: true })
+    @Mutation(() => Combinations, { nullable: true })
     @UseMiddleware(isAuth)
     async updateCombination(
       @Arg("combination_id", () => Int) combination_id: number,
       @Arg("logical_operator") logical_operator: string,
       @Ctx() { req }: MyContext
-    ): Promise<Combination | null> {
+    ): Promise<Combinations | null> {
+      console.log(req)
       const result = await getConnection()
         .createQueryBuilder()
-        .update(Combination)
+        .update(Combinations)
         .set({ logical_operator })
         .where('combination_id = :id'/*and "creatorId" = :creatorId'*/, {
           combination_id
@@ -142,6 +144,7 @@ import {
       @Arg("combination_id", () => Int) combination_id: number,
       @Ctx() { req }: MyContext
     ): Promise<boolean> {
+      console.log(req)
       // not cascade way
       // const post = await Post.findOne(id);
       // if (!post) {
@@ -154,7 +157,7 @@ import {
       // await Updoot.delete({ postId: id });
       // await Post.delete({ id });
   
-      await Combination.delete({ combination_id /*, creatorId: req.session.userId*/ });
+      await Combinations.delete({ combination_id /*, creatorId: req.session.userId*/ });
       return true;
     }
   }

@@ -13,7 +13,7 @@ import {
     UseMiddleware,
   } from "type-graphql";
   import { getConnection } from "typeorm";
-  import { Capability } from "../entities/Capability";
+  import { Capabilities } from "../entities/Capabilities";
   import { isAuth } from "../middleware/isAuth";
   import { MyContext } from "../types";
   
@@ -25,16 +25,16 @@ import {
   
   @ObjectType()
   class PaginatedCapabilities {
-    @Field(() => [Capability])
-    capabilities: Capability[];
+    @Field(() => [Capabilities])
+    capabilities: Capabilities[];
     @Field()
     hasMore: boolean;
   }
   
-  @Resolver(Capability)
+  @Resolver(Capabilities)
   export class CapabilityResolver {
     @FieldResolver(() => String)
-    textSnippet(@Root() capability: Capability) {
+    textSnippet(@Root() capability: Capabilities) {
       return capability.name.slice(0, 50);
     }
   
@@ -96,34 +96,36 @@ import {
       };
     }
   
-    @Query(() => Capability, { nullable: true })
-    post(@Arg("capability_id", () => Int) capability_id: number): Promise<Capability | undefined> {
-      return Capability.findOne(capability_id);
+    @Query(() => Capabilities, { nullable: true })
+    post(@Arg("capability_id", () => Int) capability_id: number): Promise<Capabilities | undefined> {
+      return Capabilities.findOne(capability_id);
     }
   
-    @Mutation(() => Capability)
+    @Mutation(() => Capabilities)
     @UseMiddleware(isAuth)
     async createCapability(
       @Arg("input") input: CapabilityInput,
       @Ctx() { req }: MyContext
-    ): Promise<Capability> {
-      return Capability.create({
+    ): Promise<Capabilities> {
+      console.log(req)
+      return Capabilities.create({
         ...input
         // ,
         // creatorId: req.session.userId,
       }).save();
     }
   
-    @Mutation(() => Capability, { nullable: true })
+    @Mutation(() => Capabilities, { nullable: true })
     @UseMiddleware(isAuth)
     async updateCapability(
       @Arg("capability_id", () => Int) year_id: number,
       @Arg("name") name: string,
       @Ctx() { req }: MyContext
-    ): Promise<Capability | null> {
+    ): Promise<Capabilities | null> {
+      console.log(req)
       const result = await getConnection()
         .createQueryBuilder()
-        .update(Capability)
+        .update(Capabilities)
         .set({ name })
         .where('capability_id = :id'/*and "creatorId" = :creatorId'*/, {
           year_id
@@ -142,6 +144,7 @@ import {
       @Arg("capability_id", () => Int) capability_id: number,
       @Ctx() { req }: MyContext
     ): Promise<boolean> {
+      console.log(req)
       // not cascade way
       // const post = await Post.findOne(id);
       // if (!post) {
@@ -154,7 +157,7 @@ import {
       // await Updoot.delete({ postId: id });
       // await Post.delete({ id });
   
-      await Capability.delete({ capability_id /*, creatorId: req.session.userId*/ });
+      await Capabilities.delete({ capability_id /*, creatorId: req.session.userId*/ });
       return true;
     }
   }

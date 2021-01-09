@@ -18,7 +18,8 @@ import { createConnection } from "typeorm";
 //import { Updoot } from "./entities/Updoot";
 import { createUserLoader } from "./utils/createUserLoader";
 import { createUpdootLoader } from "./utils/createUpdootLoader";
-import { Institution } from "./entities/Institution";
+import { Institutions } from "./entities/Institutions";
+import { InstitutionResolver } from "./resolvers/institution";
 
 const main = async () => {
   const conn = await createConnection({
@@ -27,12 +28,12 @@ const main = async () => {
     logging: true,
     // synchronize: true,
     //migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [Institution],
-    host: "",  
+    entities: [Institutions],
+    host: "scheduler.c3n9hvogtjwh.us-east-2.rds.amazonaws.com",  
     port: 5432,
-    username: "", //config goes heres need to add config reference
-    password: "",
-    database: "",
+    username: "postgres",
+    password: "_;*ce=,]r3WZ~.Nh,+",
+    database: "scheduler",
   });
   console.log(conn)
   //await conn.runMigrations();
@@ -72,7 +73,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, PostResolver, UserResolver],
+      resolvers: [HelloResolver, InstitutionResolver , PostResolver, UserResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({

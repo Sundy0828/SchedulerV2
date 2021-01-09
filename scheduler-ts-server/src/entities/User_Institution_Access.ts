@@ -8,14 +8,14 @@ import {
 
 @ObjectType()
 @Entity()
-export class DisciplineCourse extends BaseEntity {
+export class User_Institution_Access extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
-  discipline_id!: number; 
+  user_id!: number;
 
   @Field()
   @Column()
-  course_id!: number;
+  institution_id!: number;
 
 
 // Should add these

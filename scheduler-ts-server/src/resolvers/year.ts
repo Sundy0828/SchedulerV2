@@ -109,6 +109,7 @@ import {
       @Arg("input") input: YearInput,
       @Ctx() { req }: MyContext
     ): Promise<Year> {
+      console.log(req)
       return Year.create({
         ...input
         // ,
@@ -124,6 +125,7 @@ import {
       @Arg("institutions_id") institution_id: number,
       @Ctx() { req }: MyContext
     ): Promise<Year | null> {
+      console.log(req)
       const result = await getConnection()
         .createQueryBuilder()
         .update(Year)
@@ -145,6 +147,7 @@ import {
       @Arg("year_id", () => Int) year_id: number,
       @Ctx() { req }: MyContext
     ): Promise<boolean> {
+      console.log(req)
       // not cascade way
       // const post = await Post.findOne(id);
       // if (!post) {

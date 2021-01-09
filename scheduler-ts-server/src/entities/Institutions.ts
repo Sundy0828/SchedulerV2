@@ -8,14 +8,10 @@ import {
 
 @ObjectType()
 @Entity()
-export class Course extends BaseEntity {
+export class Institutions extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
-  course_id!: number;
-
-  @Field()
-  @Column() 
-  prequisite_combination_id!: number;
+  institution_id!: number;
 
   @Field()
   @Column()
@@ -23,19 +19,11 @@ export class Course extends BaseEntity {
 
   @Field()
   @Column()
-  credits!: number;
+  public_key!: string;
 
   @Field()
-  @Column()
-  code!: number;
-
-  @Field()
-  @Column()
-  semester_available!: number;
-
-  @Field()
-  @Column()
-  years_available!: number;
+  @Column({ type: "int", default: 0 })
+  secret_key!: string;
 
 // Should add these
 //   @Field()

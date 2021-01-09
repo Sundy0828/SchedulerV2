@@ -4,19 +4,24 @@ import {
   Column,
   PrimaryGeneratedColumn,
   BaseEntity,
+  OneToMany,
 } from "typeorm";
+//import {Institutions} from './Institutions';
 
 @ObjectType()
 @Entity()
-export class UserType extends BaseEntity {
+export class Semesters extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
-  user_type_id!: number;
+  semester_id!: number;
 
   @Field()
   @Column()
   name!: string;
 
+  @Field()
+  @Column()
+  institution_id!: number;
 
 // Should add these
 //   @Field()

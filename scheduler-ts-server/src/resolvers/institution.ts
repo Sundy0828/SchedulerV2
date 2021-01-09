@@ -13,9 +13,10 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
-import { Institution } from "../entities/Institution";
+import { Institutions } from "../entities/Institutions";
 import { isAuth } from "../middleware/isAuth";
 import { MyContext } from "../types";
+//import { InstitutionName } from "../interfaces/InstitutionName";
 
 @InputType()
 class InstitutionInput {
@@ -29,16 +30,22 @@ class InstitutionInput {
 
 @ObjectType()
 class PaginatedInstitutions {
-  @Field(() => [Institution])
-  institutions: Institution[];
+  @Field(() => [Institutions])
+  institutions: Institutions[];
   @Field()
   hasMore: boolean;
 }
 
-@Resolver(Institution)
+@ObjectType()
+class testType {
+  @Field(() => [Institutions])
+  name: String;
+}
+
+@Resolver(Institutions)
 export class InstitutionResolver {
   @FieldResolver(() => String)
-  textSnippet(@Root() Institution: Institution) {
+  textSnippet(@Root() Institution: Institutions) {
     return Institution.name.slice(0, 50);
   }
 
@@ -46,6 +53,32 @@ export class InstitutionResolver {
   // creator(@Root() year: Year, @Ctx() { userLoader }: MyContext) {
   //   return userLoader.load(year.creatorId);
   // }
+
+  @Query(() => PaginatedInstitutions)
+  async getAllInstitutions() {
+    const realLimit = Math.min(50, 10);
+    const reaLimitPlusOne = realLimit + 1;
+
+    const replacements: any[] = [reaLimitPlusOne];
+    return await getConnection().query(
+      `
+      select i.*
+      from institutions i
+      limit $1
+      `,
+      replacements
+    );
+  }
+  @Query(() => testType)
+  test() {
+    return getConnection().query(
+      `
+      select name
+      from institutions
+      where institution_id = 1
+      `
+    );
+  }
 
   @Query(() => PaginatedInstitutions)
   async institutions(
@@ -100,25 +133,26 @@ export class InstitutionResolver {
     };
   }
 
-  @Query(() => Institution, { nullable: true })
-  post(@Arg("institution_id", () => Int) institution_id: number): Promise<Institution | undefined> {
-    return Institution.findOne(institution_id);
+  @Query(() => Institutions, { nullable: true })
+  institution(@Arg("institution_id", () => Int) institution_id: number): Promise<Institutions | undefined> {
+    return Institutions.findOne(institution_id);
   }
 
-  @Mutation(() => Institution)
+  @Mutation(() => Institutions)
   @UseMiddleware(isAuth)
   async createCombination(
     @Arg("input") input: InstitutionInput,
     @Ctx() { req }: MyContext
-  ): Promise<Institution> {
-    return Institution.create({
+  ): Promise<Institutions> {
+    console.log(req)
+    return Institutions.create({
       ...input
       // ,
       // creatorId: req.session.userId,
     }).save();
   }
 
-  @Mutation(() => Institution, { nullable: true })
+  @Mutation(() => Institutions, { nullable: true })
   @UseMiddleware(isAuth)
   async updateInstitution(
     @Arg("institution_id", () => Int) institution_id: number,
@@ -126,10 +160,11 @@ export class InstitutionResolver {
     @Arg("public_key") public_key: string,
     @Arg("secret_key") secret_key: string,
     @Ctx() { req }: MyContext
-  ): Promise<Institution | null> {
+  ): Promise<Institutions | null> {
+    console.log(req)
     const result = await getConnection()
       .createQueryBuilder()
-      .update(Institution)
+      .update(Institutions)
       .set({ name,public_key,secret_key })
       .where('institution_id = :id'/*and "creatorId" = :creatorId'*/, {
         institution_id
@@ -148,6 +183,7 @@ export class InstitutionResolver {
     @Arg("institution_id", () => Int) institution_id: number,
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
+    console.log(req)
     // not cascade way
     // const post = await Post.findOne(id);
     // if (!post) {
@@ -160,7 +196,7 @@ export class InstitutionResolver {
     // await Updoot.delete({ postId: id });
     // await Post.delete({ id });
 
-    await Institution.delete({ institution_id /*, creatorId: req.session.userId*/ });
+    await Institutions.delete({ institution_id /*, creatorId: req.session.userId*/ });
     return true;
   }
 }

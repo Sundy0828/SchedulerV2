@@ -13,7 +13,7 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
-import { UserType } from "../entities/UserType";
+import { User_Types } from "../entities/User_Types";
 import { isAuth } from "../middleware/isAuth";
 import { MyContext } from "../types";
 
@@ -25,16 +25,16 @@ class UserTypeInput {
 
 @ObjectType()
 class PaginatedUserTypes {
-  @Field(() => [UserType])
-  userTypes: UserType[];
+  @Field(() => [User_Types])
+  userTypes: User_Types[];
   @Field()
   hasMore: boolean;
 }
 
-@Resolver(UserType)
+@Resolver(User_Types)
 export class UserTypeResolver {
   @FieldResolver(() => String)
-  textSnippet(@Root() userType: UserType) {
+  textSnippet(@Root() userType: User_Types) {
     return userType.name.slice(0, 50);
   }
 
@@ -96,34 +96,36 @@ export class UserTypeResolver {
     };
   }
 
-  @Query(() => UserType, { nullable: true })
-  post(@Arg("user_type_id", () => Int) user_type_id: number): Promise<UserType | undefined> {
-    return UserType.findOne(user_type_id);
+  @Query(() => User_Types, { nullable: true })
+  post(@Arg("user_type_id", () => Int) user_type_id: number): Promise<User_Types | undefined> {
+    return User_Types.findOne(user_type_id);
   }
 
-  @Mutation(() => UserType)
+  @Mutation(() => User_Types)
   @UseMiddleware(isAuth)
   async createUserType(
     @Arg("input") input: UserTypeInput,
     @Ctx() { req }: MyContext
-  ): Promise<UserType> {
-    return UserType.create({
+  ): Promise<User_Types> {
+    console.log(req)
+    return User_Types.create({
       ...input
       // ,
       // creatorId: req.session.userId,
     }).save();
   }
 
-  @Mutation(() => UserType, { nullable: true })
+  @Mutation(() => User_Types, { nullable: true })
   @UseMiddleware(isAuth)
   async updateUserType(
     @Arg("user_type_id", () => Int) user_type_id: number,
     @Arg("name") name: string,
     @Ctx() { req }: MyContext
-  ): Promise<UserType | null> {
+  ): Promise<User_Types | null> {
+    console.log(req)
     const result = await getConnection()
       .createQueryBuilder()
-      .update(UserType)
+      .update(User_Types)
       .set({ name })
       .where('user_type_id = :id'/*and "creatorId" = :creatorId'*/, {
         user_type_id
@@ -142,6 +144,7 @@ export class UserTypeResolver {
     @Arg("user_type_id", () => Int) user_type_id: number,
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
+    console.log(req)
     // not cascade way
     // const post = await Post.findOne(id);
     // if (!post) {
@@ -154,7 +157,7 @@ export class UserTypeResolver {
     // await Updoot.delete({ postId: id });
     // await Post.delete({ id });
 
-    await UserType.delete({ user_type_id /*, creatorId: req.session.userId*/ });
+    await User_Types.delete({ user_type_id /*, creatorId: req.session.userId*/ });
     return true;
   }
 }

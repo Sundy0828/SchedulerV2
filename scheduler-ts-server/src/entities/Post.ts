@@ -9,7 +9,7 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
-import { User } from "./User";
+import { Users } from "./Users";
 import { Updoot } from "./Updoot";
 
 @ObjectType()
@@ -39,8 +39,8 @@ export class Post extends BaseEntity {
   creatorId: number;
 
   @Field()
-  @ManyToOne(() => User, (user) => user.posts)
-  creator: User;
+  @ManyToOne(() => Users, (user) => user.posts)
+  creator: Users;
 
   @OneToMany(() => Updoot, (updoot) => updoot.post)
   updoots: Updoot[];

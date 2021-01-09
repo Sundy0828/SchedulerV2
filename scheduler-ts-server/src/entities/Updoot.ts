@@ -1,5 +1,5 @@
 import { Entity, BaseEntity, ManyToOne, PrimaryColumn, Column } from "typeorm";
-import { User } from "./User";
+import { Users } from "./Users";
 import { Post } from "./Post";
 
 // m to n
@@ -16,8 +16,8 @@ export class Updoot extends BaseEntity {
   @PrimaryColumn()
   userId: number;
 
-  @ManyToOne(() => User, (user) => user.updoots)
-  user: User;
+  @ManyToOne(() => Users, (user) => user.updoots)
+  user: Users;
 
   @PrimaryColumn()
   postId: number;

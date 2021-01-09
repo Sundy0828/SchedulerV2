@@ -10,7 +10,7 @@ import {
   Root,
 } from "type-graphql";
 import { MyContext } from "../types";
-import { User } from "../entities/User";
+import { Users } from "../entities/Users";
 import argon2 from "argon2";
 import { /*COOKIE_NAME,*/ FORGET_PASSWORD_PREFIX } from "../constants";
 import { UsernamePasswordInput } from "./UsernamePasswordInput";
@@ -32,14 +32,14 @@ class UserResponse {
   @Field(() => [FieldError], { nullable: true })
   errors?: FieldError[];
 
-  @Field(() => User, { nullable: true })
-  user?: User;
+  @Field(() => Users, { nullable: true })
+  user?: Users;
 }
 
-@Resolver(User)
+@Resolver(Users)
 export class UserResolver {
   @FieldResolver(() => String)
-  email(@Root() user: User, @Ctx() { req }: MyContext) {
+  email(@Root() user: Users, @Ctx() { req }: MyContext) {
     console.log(req)
     // this is the current user and its ok to show them their own email
     if (/*req.session.userId === user.id*/ 1=== user.id) {
@@ -81,7 +81,7 @@ export class UserResolver {
     }
 
     const userIdNum = parseInt(userId);
-    const user = await User.findOne(userIdNum);
+    const user = await Users.findOne(userIdNum);
 
     if (!user) {
       return {
@@ -94,7 +94,7 @@ export class UserResolver {
       };
     }
 
-    await User.update(
+    await Users.update(
       { id: userIdNum },
       {
         password: await argon2.hash(newPassword),
@@ -114,7 +114,7 @@ export class UserResolver {
     @Arg("email") email: string,
     @Ctx() { redis }: MyContext
   ) {
-    const user = await User.findOne({ where: { email } });
+    const user = await Users.findOne({ where: { email } });
     if (!user) {
       // the email is not in the db
       return true;
@@ -137,7 +137,7 @@ export class UserResolver {
     return true;
   }
 
-  @Query(() => User, { nullable: true })
+  @Query(() => Users, { nullable: true })
   me(@Ctx() { req }: MyContext) {
     console.log(req)
     // you are not logged in
@@ -145,7 +145,7 @@ export class UserResolver {
       return null;
     }
 
-    return User.findOne(1/*req.session.userId*/);
+    return Users.findOne(1/*req.session.userId*/);
   }
 
   @Mutation(() => UserResponse)
@@ -166,7 +166,7 @@ export class UserResolver {
       const result = await getConnection()
         .createQueryBuilder()
         .insert()
-        .into(User)
+        .into(Users)
         .values({
           username: options.username,
           email: options.email,
@@ -205,7 +205,7 @@ export class UserResolver {
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
     console.log(req)
-    const user = await User.findOne(
+    const user = await Users.findOne(
       usernameOrEmail.includes("@")
         ? { where: { email: usernameOrEmail } }
         : { where: { username: usernameOrEmail } }

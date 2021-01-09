@@ -13,7 +13,7 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
-import { UserTypeCapabilites } from "../entities/UserTypeCapabilites";
+import { User_Type_Capabilites } from "../entities/User_Type_Capabilites";
 import { isAuth } from "../middleware/isAuth";
 import { MyContext } from "../types";
 
@@ -25,16 +25,16 @@ class UserTypeCapabilitesInput {
 
 @ObjectType()
 class PaginatedUserTypeCapabilites {
-  @Field(() => [UserTypeCapabilites])
-  userTypeCapabilites: UserTypeCapabilites[];
+  @Field(() => [User_Type_Capabilites])
+  userTypeCapabilites: User_Type_Capabilites[];
   @Field()
   hasMore: boolean;
 }
 
-@Resolver(UserTypeCapabilites)
+@Resolver(User_Type_Capabilites)
 export class UserTypeCapabilitesResolver {
   @FieldResolver(() => String)
-  textSnippet(@Root() userTypeCapabilites: UserTypeCapabilites) {
+  textSnippet(@Root() userTypeCapabilites: User_Type_Capabilites) {
     return;
     //return userTypeCapabilites.capability_id.slice(0, 50);
   }
@@ -97,34 +97,34 @@ export class UserTypeCapabilitesResolver {
     };
   }
 
-  @Query(() => UserTypeCapabilites, { nullable: true })
-  post(@Arg("user_type_id", () => Int) user_type_id: number): Promise<UserTypeCapabilites | undefined> {
-    return UserTypeCapabilites.findOne(user_type_id);
+  @Query(() => User_Type_Capabilites, { nullable: true })
+  post(@Arg("user_type_id", () => Int) user_type_id: number): Promise<User_Type_Capabilites | undefined> {
+    return User_Type_Capabilites.findOne(user_type_id);
   }
 
-  @Mutation(() => UserTypeCapabilites)
+  @Mutation(() => User_Type_Capabilites)
   @UseMiddleware(isAuth)
   async createUserTypeCapability(
     @Arg("input") input: UserTypeCapabilitesInput,
     @Ctx() { req }: MyContext
-  ): Promise<UserTypeCapabilites> {
-    return UserTypeCapabilites.create({
+  ): Promise<User_Type_Capabilites> {
+    return User_Type_Capabilites.create({
       ...input
       // ,
       // creatorId: req.session.userId,
     }).save();
   }
 
-  @Mutation(() => UserTypeCapabilites, { nullable: true })
+  @Mutation(() => User_Type_Capabilites, { nullable: true })
   @UseMiddleware(isAuth)
   async updateUserTypeCapability(
     @Arg("user_type_id", () => Int) user_type_id: number,
     @Arg("capability_id") capability_id: number,
     @Ctx() { req }: MyContext
-  ): Promise<UserTypeCapabilites | null> {
+  ): Promise<User_Type_Capabilites | null> {
     const result = await getConnection()
       .createQueryBuilder()
-      .update(UserTypeCapabilites)
+      .update(User_Type_Capabilites)
       .set({ capability_id })
       .where('user_type_id = :id'/*and "creatorId" = :creatorId'*/, {
         user_type_id
@@ -155,7 +155,7 @@ export class UserTypeCapabilitesResolver {
     // await Updoot.delete({ postId: id });
     // await Post.delete({ id });
 
-    await UserTypeCapabilites.delete({ user_type_id /*, creatorId: req.session.userId*/ });
+    await User_Type_Capabilites.delete({ user_type_id /*, creatorId: req.session.userId*/ });
     return true;
   }
 }

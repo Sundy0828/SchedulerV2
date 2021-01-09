@@ -13,7 +13,7 @@ import {
     UseMiddleware,
   } from "type-graphql";
   import { getConnection } from "typeorm";
-  import { CombinationCourse } from "../entities/CombinationCourse";
+  import { Combination_Courses } from "../entities/Combination_Courses";
   import { isAuth } from "../middleware/isAuth";
   import { MyContext } from "../types";
   
@@ -33,10 +33,11 @@ import {
     hasMore: boolean;
   }
   
-  @Resolver(CombinationCourse)
+  @Resolver(Combination_Courses)
   export class CombinationCourseResolver {
     @FieldResolver(() => String)
-    textSnippet(@Root() combinationCourse: CombinationCourse) {
+    textSnippet(@Root() combinationCourse: Combination_Courses) {
+      console.log(combinationCourse)
       return;
       //return combinationCourse.course_id.slice(0, 50);
     }
@@ -99,35 +100,37 @@ import {
       };
     }
   
-    @Query(() => CombinationCourse, { nullable: true })
-    post(@Arg("combination_id", () => Int) combination_id: number): Promise<CombinationCourse | undefined> {
-      return CombinationCourse.findOne(combination_id);
+    @Query(() => Combination_Courses, { nullable: true })
+    post(@Arg("combination_id", () => Int) combination_id: number): Promise<Combination_Courses | undefined> {
+      return Combination_Courses.findOne(combination_id);
     }
   
-    @Mutation(() => CombinationCourse)
+    @Mutation(() => Combination_Courses)
     @UseMiddleware(isAuth)
     async createCombinationCourse(
       @Arg("input") input: CombinationCourseInput,
       @Ctx() { req }: MyContext
-    ): Promise<CombinationCourse> {
-      return CombinationCourse.create({
+    ): Promise<Combination_Courses> {
+      console.log(req)
+      return Combination_Courses.create({
         ...input
         // ,
         // creatorId: req.session.userId,
       }).save();
     }
   
-    @Mutation(() => CombinationCourse, { nullable: true })
+    @Mutation(() => Combination_Courses, { nullable: true })
     @UseMiddleware(isAuth)
     async updateCombinationCourse(
       @Arg("combination_id", () => Int) combination_id: number,
       @Arg("course_id") course_id: number,
       @Arg("sub_combination_id") sub_combination_id: number,
       @Ctx() { req }: MyContext
-    ): Promise<CombinationCourse | null> {
+    ): Promise<Combination_Courses | null> {
+      console.log(req)
       const result = await getConnection()
         .createQueryBuilder()
-        .update(CombinationCourse)
+        .update(Combination_Courses)
         .set({ course_id, sub_combination_id })
         .where('combination_id = :id'/*and "creatorId" = :creatorId'*/, {
           combination_id
@@ -146,6 +149,7 @@ import {
       @Arg("combination_id", () => Int) combination_id: number,
       @Ctx() { req }: MyContext
     ): Promise<boolean> {
+      console.log(req)
       // not cascade way
       // const post = await Post.findOne(id);
       // if (!post) {
@@ -158,7 +162,7 @@ import {
       // await Updoot.delete({ postId: id });
       // await Post.delete({ id });
   
-      await CombinationCourse.delete({ combination_id /*, creatorId: req.session.userId*/ });
+      await Combination_Courses.delete({ combination_id /*, creatorId: req.session.userId*/ });
       return true;
     }
   }

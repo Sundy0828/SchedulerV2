@@ -4,24 +4,19 @@ import {
   Column,
   PrimaryGeneratedColumn,
   BaseEntity,
-  OneToMany,
 } from "typeorm";
-import {Institution} from './Institution';
 
 @ObjectType()
 @Entity()
-export class Semester extends BaseEntity {
+export class Discipline_Courses extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
-  semester_id!: number;
+  discipline_id!: number; 
 
   @Field()
   @Column()
-  name!: string;
+  course_id!: number;
 
-  @Field()
-  @Column()
-  institution_id!: number;
 
 // Should add these
 //   @Field()

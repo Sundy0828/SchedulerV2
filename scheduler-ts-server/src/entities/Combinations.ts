@@ -8,18 +8,14 @@ import {
 
 @ObjectType()
 @Entity()
-export class CombinationCourse extends BaseEntity {
-  @Field() 
+export class Combinations extends BaseEntity {
+  @Field()
   @PrimaryGeneratedColumn()
   combination_id!: number;
 
   @Field()
   @Column()
-  course_id!: number;
-
-  @Field()
-  @Column()
-  sub_combination_id!: number;
+  logical_operator!: string;
 
 
 // Should add these
