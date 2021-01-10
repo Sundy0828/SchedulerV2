@@ -1,4 +1,4 @@
-const utility = require("../core/Utility")
+const utility = require("../core/Utility");
 const config = require('../config/config');
 
 const code = "Capability";

@@ -61,3 +61,18 @@ yarn dev
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
+
+
+## TypeORM
+https://typeorm.io/#/
+
+npm install typeorm -g
+npm install reflect-metadata --save
+
+
+To Start TS Web and TS Server projects 
+run Yarn Dev
+
+Once the server is running you can go to 
+http://localhost:4000/graphql 
+to run custom queries

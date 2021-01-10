@@ -15,7 +15,9 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.5.1",
     "postgresql-easy": "^1.2.5",
+    "reflect-metadata": "^0.1.13",
     "serverless-http": "^2.6.0",
-    "serverless-offline": "^6.8.0"
+    "serverless-offline": "^6.8.0",
+    "typeorm": "^0.2.29"
   }
 }
