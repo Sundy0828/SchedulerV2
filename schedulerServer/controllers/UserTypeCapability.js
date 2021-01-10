@@ -127,3 +127,20 @@ async function deleteUserTypeCapability(id)
 
     return utility.standardReturn(success, msg)
 }
+
+async function hasCapability(user_key, capability_name)
+{
+    var sql = "SELECT * FROM user_type_capabilities utc JOIN user u ON u.user_id = utc.user_id JOIN capabilities c ON c.capability_id = utc.capability_id WHERE u.user_key = $1 AND c.name = $2";
+    var params = [user_key, capability_name];
+    var res = await utility.pgQueryParams(sql, params, code);
+
+    var exists = true;
+    if (res != code && res.rowCount < 1)
+    {
+        exists = false;
+    }
+
+    return utility.standardReturn(exists)
+}
+
+module.exports = {hasCapability}
