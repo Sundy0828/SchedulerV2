@@ -35,8 +35,8 @@ import {
   */
   @ObjectType()
   class PaginatedCombinationCourses {
-    @Field(() => [CombinationCourseInput])
-    combinationCourses: CombinationCourseInput[];
+    @Field(() => [Combination_Courses])
+    combinationCourses: Combination_Courses[];
     @Field()
     hasMore: boolean;
   }

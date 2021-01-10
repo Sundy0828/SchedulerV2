@@ -8,7 +8,7 @@ export const createUserLoader = () =>
     const users = await Users.findByIds(userIds as number[]);
     const userIdToUser: Record<number, Users> = {};
     users.forEach((u) => {
-      userIdToUser[u.id] = u;
+      userIdToUser[u.user_id] = u;
     });
 
     const sortedUsers = userIds.map((userId) => userIdToUser[userId]);

@@ -37,7 +37,7 @@ class PaginatedCourses {
 }
 
 @Resolver(Courses)
-export class PaginatedCourseResolver {
+export class CoursesResolver {
   @FieldResolver(() => String)
   textSnippet(@Root() course: Courses) {
     return course.name.slice(0, 50);

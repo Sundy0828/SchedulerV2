@@ -4,8 +4,6 @@ import { __prod__/*, COOKIE_NAME */ } from "./constants";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
-import { HelloResolver } from "./resolvers/hello";
-import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
 //import Redis from "ioredis";
 //import session from "express-session";
@@ -17,7 +15,6 @@ import { createConnection } from "typeorm";
 //import path from "path";
 //import { Updoot } from "./entities/Updoot";
 import { createUserLoader } from "./utils/createUserLoader";
-import { createUpdootLoader } from "./utils/createUpdootLoader";
 import { Institutions } from "./entities/Institutions";
 import { InstitutionResolver } from "./resolvers/institution";
 import { Capabilities } from "./entities/Capabilities";
@@ -32,6 +29,17 @@ import { Combination_Courses } from "./entities/Combination_Courses";
 import { Discipline_Courses } from "./entities/Discipline_Courses";
 import { User_Type_Capabilites } from "./entities/User_Type_Capabilites";
 import { Disciplines } from "./entities/Disciplines";
+import { DisciplineCourseResolver } from "./resolvers/disciplineCourse";
+import { CombinationResolver } from "./resolvers/combination";
+import { SemesterResolver } from "./resolvers/semester";
+import { UserInstitutionAccessResolver } from "./resolvers/userInstitutionAccess";
+import { UserTypeCapabilitesResolver } from "./resolvers/userTypeCapabilites";
+import { YearResolver } from "./resolvers/year";
+import { CapabilityResolver } from "./resolvers/capability";
+import { CombinationCourseResolver } from "./resolvers/combinationCourse";
+import { DisciplineResolver } from "./resolvers/discipline";
+import { UserTypeResolver } from "./resolvers/userType";
+import { CoursesResolver } from "./resolvers/course";
 var dbConfig = require('./config/config');
 
 const main = async () => {
@@ -100,7 +108,21 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, InstitutionResolver , PostResolver, UserResolver],
+      resolvers: [
+        CapabilityResolver,
+        CombinationResolver,
+        CombinationCourseResolver,
+        CoursesResolver,
+        DisciplineResolver,
+        DisciplineCourseResolver,
+        InstitutionResolver, 
+        SemesterResolver,
+        UserResolver,
+        UserInstitutionAccessResolver,
+        UserTypeResolver,
+        UserTypeCapabilitesResolver,
+        YearResolver
+      ],
       validate: false,
     }),
     context: ({ req, res }) => ({
@@ -108,7 +130,6 @@ const main = async () => {
       res,
       //redis,
       userLoader: createUserLoader(),
-      updootLoader: createUpdootLoader(),
     }),
   });
 

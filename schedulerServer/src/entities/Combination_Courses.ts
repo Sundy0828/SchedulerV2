@@ -15,11 +15,11 @@ export class Combination_Courses extends BaseEntity {
 
   @Field()
   @Column()
-  course_id!: number;
+  course_id: number;
 
   @Field()
   @Column()
-  sub_combination_id!: number;
+  sub_combination_id: number;
 
 
 // Should add these

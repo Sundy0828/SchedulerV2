@@ -42,7 +42,7 @@ export class UserResolver {
   email(@Root() user: Users, @Ctx() { req }: MyContext) {
     console.log(req)
     // this is the current user and its ok to show them their own email
-    if (/*req.session.userId === user.id*/ 1=== user.id) {
+    if (/*req.session.userId === user.id*/ 1=== user.user_id) {
       return user.email;
     }
     // current user wants to see someone elses email
@@ -95,7 +95,7 @@ export class UserResolver {
     }
 
     await Users.update(
-      { id: userIdNum },
+      { user_id: userIdNum },
       {
         password: await argon2.hash(newPassword),
       }
@@ -124,7 +124,7 @@ export class UserResolver {
 
     await redis.set(
       FORGET_PASSWORD_PREFIX + token,
-      user.id,
+      user.user_id,
       "ex",
       1000 * 60 * 60 * 24 * 3
     ); // 3 days
@@ -168,7 +168,6 @@ export class UserResolver {
         .insert()
         .into(Users)
         .values({
-          username: options.username,
           email: options.email,
           password: hashedPassword,
         })
