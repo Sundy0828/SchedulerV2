@@ -20,20 +20,21 @@ import { createUserLoader } from "./utils/createUserLoader";
 import { createUpdootLoader } from "./utils/createUpdootLoader";
 import { Institutions } from "./entities/Institutions";
 import { InstitutionResolver } from "./resolvers/institution";
+var dbConfig = require('./config/config');
 
 const main = async () => {
   const conn = await createConnection({
-    type: "postgres",
+    type: dbConfig.type,
     //url: process.env.DATABASE_URL,
     logging: true,
     // synchronize: true,
     //migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [Institutions],
-    host: "scheduler.c3n9hvogtjwh.us-east-2.rds.amazonaws.com",  
-    port: 5432,
-    username: "postgres",
-    password: "_;*ce=,]r3WZ~.Nh,+",
-    database: "scheduler",
+    entities: [Institutions], 
+    host: dbConfig.host,  
+    port: dbConfig.port,
+    username: dbConfig.username,
+    password: dbConfig.password,
+    database: dbConfig.database,
   });
   console.log(conn)
   //await conn.runMigrations();
