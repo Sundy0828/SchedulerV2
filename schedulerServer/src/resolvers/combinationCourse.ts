@@ -20,7 +20,7 @@ import {
   /**
    * This is similar to a type/interface, this is just the graphql way. Use this instead of passing multiple values as arguments
    * 
-  */
+  */ 
   @InputType()
   class CombinationCourseInput {
     @Field()

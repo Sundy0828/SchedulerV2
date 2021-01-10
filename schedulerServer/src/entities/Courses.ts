@@ -15,7 +15,7 @@ export class Courses extends BaseEntity {
 
   @Field()
   @Column() 
-  prequisite_combination_id: number;
+  prerequisite_combination_id: number;
 
   @Field()
   @Column()
@@ -27,11 +27,11 @@ export class Courses extends BaseEntity {
 
   @Field()
   @Column()
-  code!: number;
+  code!: number; 
 
   @Field()
   @Column()
-  semester_available!: number;
+  semesters_available!: number;
 
   @Field()
   @Column()

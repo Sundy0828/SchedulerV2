@@ -20,11 +20,11 @@ import { MyContext } from "../types";
 @InputType()
 class CourseInput {
   @Field()
-  prequisite_combination_id: number;
+  prerequisite_combination_id: number;
   name: string;
   credits: number;
   code: number;
-  semester_available: number;
+  semesters_available: number;
   years_available: number;
 }
 
@@ -100,11 +100,11 @@ export class CoursesResolver {
   @UseMiddleware(isAuth)
   async updateCourse(
     @Arg("course_id", () => Int) course_id: number,
-    @Arg("prequisite_combination_id") prequisite_combination_id: number,
+    @Arg("prerequisite_combination_id") prerequisite_combination_id: number,
     @Arg("name") name: string,
     @Arg("credits") credits: number,
     @Arg("code") code: number,
-    @Arg("semester_available") semester_available: number,
+    @Arg("semesters_available") semesters_available: number,
     @Arg("years_available") years_available: number,
     @Ctx() { req }: MyContext
   ): Promise<Courses | null> {
@@ -112,7 +112,7 @@ export class CoursesResolver {
     const result = await getConnection()
       .createQueryBuilder()
       .update(Courses)
-      .set({ prequisite_combination_id,name,credits,code,semester_available,years_available })
+      .set({   prerequisite_combination_id,name,credits,code,semesters_available,years_available })
       .where('course_id = :id'/*and "creatorId" = :creatorId'*/, {
         course_id
       //   ,

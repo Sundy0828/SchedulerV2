@@ -4,7 +4,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   BaseEntity,
-} from "typeorm";
+} from "typeorm"; 
 
 @ObjectType()
 @Entity()
