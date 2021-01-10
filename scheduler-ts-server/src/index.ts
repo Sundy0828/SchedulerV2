@@ -20,6 +20,18 @@ import { createUserLoader } from "./utils/createUserLoader";
 import { createUpdootLoader } from "./utils/createUpdootLoader";
 import { Institutions } from "./entities/Institutions";
 import { InstitutionResolver } from "./resolvers/institution";
+import { Capabilities } from "./entities/Capabilities";
+import { Combinations } from "./entities/Combinations";
+import { Courses } from "./entities/Courses";
+import { Semesters } from "./entities/Semesters";
+import { Users } from "./entities/Users";
+import { User_Institution_Access } from "./entities/User_Institution_Access";
+import { User_Types } from "./entities/User_Types";
+import { Years } from "./entities/Years";
+import { Combination_Courses } from "./entities/Combination_Courses";
+import { Discipline_Courses } from "./entities/Discipline_Courses";
+import { User_Type_Capabilites } from "./entities/User_Type_Capabilites";
+import { Disciplines } from "./entities/Disciplines";
 var dbConfig = require('./config/config');
 
 const main = async () => {
@@ -29,7 +41,21 @@ const main = async () => {
     logging: true,
     // synchronize: true,
     //migrations: [path.join(__dirname, "./migrations/*")],
-    entities: [Institutions], 
+    entities: [
+      Capabilities,
+      Combinations,
+      Combination_Courses,
+      Courses,
+      Disciplines,
+      Discipline_Courses,
+      Institutions,
+      Semesters,
+      Users, 
+      User_Institution_Access,
+      User_Types,
+      User_Type_Capabilites,
+      Years
+    ], 
     host: dbConfig.host,  
     port: dbConfig.port,
     username: dbConfig.username,
