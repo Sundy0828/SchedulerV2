@@ -43,57 +43,33 @@ export class PaginatedCourseResolver {
     return course.name.slice(0, 50);
   }
 
-  // @FieldResolver(() => User)
-  // creator(@Root() year: Year, @Ctx() { userLoader }: MyContext) {
-  //   return userLoader.load(year.creatorId);
-  // }
+  /**
+   * This is the function you will hit to grab all Institutions
+   * 
+  */
+  @Query(() => PaginatedCourses)
+  async getAllCourses(
+  ): Promise<PaginatedCourses> {
+    return  {
+      courses: await Courses.find(),
+      hasMore: false
+    }
+  }
 
   @Query(() => PaginatedCourses)
-  async courses(
+  async getPaginatedCourses(
     @Arg("limit", () => Int) limit: number,
-    @Arg("cursor", () => String, { nullable: true }) cursor: string | null
   ): Promise<PaginatedCourses> {
-    // 20 -> 21
     const realLimit = Math.min(50, limit);
     const reaLimitPlusOne = realLimit + 1;
 
     const replacements: any[] = [reaLimitPlusOne];
-
-    if (cursor) {
-      replacements.push(new Date(parseInt(cursor)));
-    }
+    const query = "SELECT * FROM courses limit $1";
 
     const courses = await getConnection().query(
-      // `
-      // select y.*
-      // from years y
-      // ${cursor ? `where y."createdAt" < $2` : ""}
-      // order by p."createdAt" DESC
-      // limit $1
-      // `,
-      `
-      select c.*
-      from courses c
-      limit $1
-      `,
+      query,
       replacements
     );
-
-    // const qb = getConnection()
-    //   .getRepository(Post)
-    //   .createQueryBuilder("p")
-    //   .innerJoinAndSelect("p.creator", "u", 'u.id = p."creatorId"')
-    //   .orderBy('p."createdAt"', "DESC")
-    //   .take(reaLimitPlusOne);
-
-    // if (cursor) {
-    //   qb.where('p."createdAt" < :cursor', {
-    //     cursor: new Date(parseInt(cursor)),
-    //   });
-    // }
-
-    // const posts = await qb.getMany();
-    // console.log("posts: ", posts);
 
     return {
       courses: courses.slice(0, realLimit),
@@ -155,18 +131,6 @@ export class PaginatedCourseResolver {
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
     console.log(req)
-    // not cascade way
-    // const post = await Post.findOne(id);
-    // if (!post) {
-    //   return false;
-    // }
-    // if (post.creatorId !== req.session.userId) {
-    //   throw new Error("not authorized");
-    // }
-
-    // await Updoot.delete({ postId: id });
-    // await Post.delete({ id });
-
     await Courses.delete({ course_id /*, creatorId: req.session.userId*/ });
     return true;
   }

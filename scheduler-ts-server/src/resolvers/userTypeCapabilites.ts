@@ -40,57 +40,33 @@ export class UserTypeCapabilitesResolver {
     //return userTypeCapabilites.capability_id.slice(0, 50);
   }
 
-  // @FieldResolver(() => User)
-  // creator(@Root() year: Year, @Ctx() { userLoader }: MyContext) {
-  //   return userLoader.load(year.creatorId);
-  // }
+  /**
+   * This is the function you will hit to grab all Institutions
+   * 
+  */
+  @Query(() => PaginatedUserTypeCapabilites)
+  async getAllUserTypeCapabilites(
+  ): Promise<PaginatedUserTypeCapabilites> {
+    return  {
+      userTypeCapabilites: await User_Type_Capabilites.find(),
+      hasMore: false
+    }
+  }
 
   @Query(() => PaginatedUserTypeCapabilites)
-  async userTypeCapabilites(
+  async getPaginatedUserTypeCapabilites(
     @Arg("limit", () => Int) limit: number,
-    @Arg("cursor", () => String, { nullable: true }) cursor: string | null
   ): Promise<PaginatedUserTypeCapabilites> {
-    // 20 -> 21
     const realLimit = Math.min(50, limit);
     const reaLimitPlusOne = realLimit + 1;
 
     const replacements: any[] = [reaLimitPlusOne];
-
-    if (cursor) {
-      replacements.push(new Date(parseInt(cursor)));
-    }
+    const query = "SELECT * FROM user_type_capabilites limit $1";
 
     const userTypeCapabilites = await getConnection().query(
-      // `
-      // select y.*
-      // from years y
-      // ${cursor ? `where y."createdAt" < $2` : ""}
-      // order by p."createdAt" DESC
-      // limit $1
-      // `,
-      `
-      select c.*
-      from combinations c
-      limit $1
-      `,
+      query,
       replacements
     );
-
-    // const qb = getConnection()
-    //   .getRepository(Post)
-    //   .createQueryBuilder("p")
-    //   .innerJoinAndSelect("p.creator", "u", 'u.id = p."creatorId"')
-    //   .orderBy('p."createdAt"', "DESC")
-    //   .take(reaLimitPlusOne);
-
-    // if (cursor) {
-    //   qb.where('p."createdAt" < :cursor', {
-    //     cursor: new Date(parseInt(cursor)),
-    //   });
-    // }
-
-    // const posts = await qb.getMany();
-    // console.log("posts: ", posts);
 
     return {
       userTypeCapabilites: userTypeCapabilites.slice(0, realLimit),
@@ -147,18 +123,6 @@ export class UserTypeCapabilitesResolver {
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
     console.log(req)
-    // not cascade way
-    // const post = await Post.findOne(id);
-    // if (!post) {
-    //   return false;
-    // }
-    // if (post.creatorId !== req.session.userId) {
-    //   throw new Error("not authorized");
-    // }
-
-    // await Updoot.delete({ postId: id });
-    // await Post.delete({ id });
-
     await User_Type_Capabilites.delete({ user_type_id /*, creatorId: req.session.userId*/ });
     return true;
   }

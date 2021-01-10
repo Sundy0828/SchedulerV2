@@ -16,18 +16,21 @@ import { getConnection } from "typeorm";
 import { Institutions } from "../entities/Institutions";
 import { isAuth } from "../middleware/isAuth";
 import { MyContext } from "../types";
-//import { InstitutionName } from "../interfaces/InstitutionName";
 
+/**
+ * This is similar to a type/interface, this is just the graphql way. Use this instead of passing multiple values as arguments
+ * 
+*/
 @InputType()
 class InstitutionInput {
   @Field()
   name: string;
-  @Field()
-  public_key: string;
-  @Field()
-  secret_key: string;
 }
 
+/**
+ * This is similar to a type/interface, this is just the graphql way. Use this as a return type
+ * 
+*/
 @ObjectType()
 class PaginatedInstitutions {
   @Field(() => [Institutions])
@@ -36,12 +39,10 @@ class PaginatedInstitutions {
   hasMore: boolean;
 }
 
-@ObjectType()
-class testType {
-  @Field(() => [Institutions])
-  name: String;
-}
-
+/**
+ * Main Resovler For Institution
+ * 
+*/
 @Resolver(Institutions)
 export class InstitutionResolver {
   @FieldResolver(() => String)
@@ -49,83 +50,39 @@ export class InstitutionResolver {
     return Institution.name.slice(0, 50);
   }
 
-  // @FieldResolver(() => User)
-  // creator(@Root() year: Year, @Ctx() { userLoader }: MyContext) {
-  //   return userLoader.load(year.creatorId);
-  // }
-
+  /**
+   * This is the function you will hit to grab all Institutions
+   * 
+  */ 
   @Query(() => PaginatedInstitutions)
-  async getAllInstitutions() {
-    const realLimit = Math.min(50, 10);
-    const reaLimitPlusOne = realLimit + 1;
-
-    const replacements: any[] = [reaLimitPlusOne];
-    return await getConnection().query(
-      `
-      select i.*
-      from institutions i
-      limit $1
-      `,
-      replacements
-    );
-  }
-  @Query(() => testType)
-  test() {
-    return getConnection().query(
-      `
-      select name
-      from institutions
-      where institution_id = 1
-      `
-    );
-  }
-
-  @Query(() => PaginatedInstitutions)
-  async institutions(
-    @Arg("limit", () => Int) limit: number,
-    @Arg("cursor", () => String, { nullable: true }) cursor: string | null
+  async getAllInstitutions(
   ): Promise<PaginatedInstitutions> {
-    // 20 -> 21
+    return  {
+      institutions: await Institutions.find(),
+      hasMore: false
+    }
+  }
+
+
+  /**
+   * This is the function you will hit to grab a select amount of Institutions
+   * @param {Number} limit The amount of records you want back if more than 50 are specified it will return 50
+   * 
+  */
+  @Query(() => PaginatedInstitutions)
+  async getPaginatedInstitutions(
+    @Arg("limit", () => Int) limit: number,
+  ): Promise<PaginatedInstitutions> {
     const realLimit = Math.min(50, limit);
     const reaLimitPlusOne = realLimit + 1;
 
     const replacements: any[] = [reaLimitPlusOne];
-
-    if (cursor) {
-      replacements.push(new Date(parseInt(cursor)));
-    }
+    const query = "SELECT * FROM institutions limit $1";
 
     const institutions = await getConnection().query(
-      // `
-      // select y.*
-      // from years y
-      // ${cursor ? `where y."createdAt" < $2` : ""}
-      // order by p."createdAt" DESC
-      // limit $1
-      // `,
-      `
-      select i.*
-      from institutions i
-      limit $1
-      `,
+      query,
       replacements
     );
-
-    // const qb = getConnection()
-    //   .getRepository(Post)
-    //   .createQueryBuilder("p")
-    //   .innerJoinAndSelect("p.creator", "u", 'u.id = p."creatorId"')
-    //   .orderBy('p."createdAt"', "DESC")
-    //   .take(reaLimitPlusOne);
-
-    // if (cursor) {
-    //   qb.where('p."createdAt" < :cursor', {
-    //     cursor: new Date(parseInt(cursor)),
-    //   });
-    // }
-
-    // const posts = await qb.getMany();
-    // console.log("posts: ", posts);
 
     return {
       institutions: institutions.slice(0, realLimit),
@@ -133,11 +90,21 @@ export class InstitutionResolver {
     };
   }
 
+  /**
+   * This function will return a single Insitution based on the id that is passed
+   * @param {Number} institution_id Apply a instituition id to return a single record
+   * 
+  */
   @Query(() => Institutions, { nullable: true })
-  institution(@Arg("institution_id", () => Int) institution_id: number): Promise<Institutions | undefined> {
+  getInstitution(@Arg("institution_id", () => Int) institution_id: number): Promise<Institutions | undefined> {
     return Institutions.findOne(institution_id);
   }
 
+  /**
+   * This function will create an Institution
+   * @param {String} name Pass an Instituition name to be created
+   * 
+  */
   @Mutation(() => Institutions)
   @UseMiddleware(isAuth)
   async createInstitution(
@@ -152,24 +119,26 @@ export class InstitutionResolver {
     }).save();
   }
 
+  /**
+   * This function will update an Institution
+   * @param {Number} institution_id Pass an Instituition Id
+   * @param {String} name Pass an Instituition name to be update
+   * 
+  */
   @Mutation(() => Institutions, { nullable: true })
   @UseMiddleware(isAuth)
   async updateInstitution(
     @Arg("institution_id", () => Int) institution_id: number,
     @Arg("name") name: string,
-    @Arg("public_key") public_key: string,
-    @Arg("secret_key") secret_key: string,
     @Ctx() { req }: MyContext
   ): Promise<Institutions | null> {
     console.log(req)
     const result = await getConnection()
       .createQueryBuilder()
       .update(Institutions)
-      .set({ name,public_key,secret_key })
-      .where('institution_id = :id'/*and "creatorId" = :creatorId'*/, {
+      .set({ name })
+      .where('institution_id = :institution_id', {
         institution_id
-      //   ,
-      //   creatorId: req.session.userId,
       })
       .returning("*")
       .execute();
@@ -177,6 +146,11 @@ export class InstitutionResolver {
     return result.raw[0];
   }
 
+  /**
+   * This function will delete an Institution
+   * @param {String} institution_id Pass an Instituition id 
+   * 
+  */
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async deleteInstitution(
@@ -184,18 +158,6 @@ export class InstitutionResolver {
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
     console.log(req)
-    // not cascade way
-    // const post = await Post.findOne(id);
-    // if (!post) {
-    //   return false;
-    // }
-    // if (post.creatorId !== req.session.userId) {
-    //   throw new Error("not authorized");
-    // }
-
-    // await Updoot.delete({ postId: id });
-    // await Post.delete({ id });
-
     await Institutions.delete({ institution_id /*, creatorId: req.session.userId*/ });
     return true;
   }

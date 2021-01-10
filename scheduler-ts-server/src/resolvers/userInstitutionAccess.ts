@@ -39,57 +39,33 @@ export class UserInstitutionAccessResolver {
     return User_Institution_Access.name.slice(0, 50);
   }
 
-  // @FieldResolver(() => User)
-  // creator(@Root() year: Year, @Ctx() { userLoader }: MyContext) {
-  //   return userLoader.load(year.creatorId);
-  // }
+  /**
+   * This is the function you will hit to grab all Institutions
+   * 
+  */
+  @Query(() => PaginatedUserInstitutionAccesses)
+  async getAllUserInstitutionAccesses(
+  ): Promise<PaginatedUserInstitutionAccesses> {
+    return  {
+      userInstitutionAccesses: await User_Institution_Access.find(),
+      hasMore: false
+    }
+  }
 
   @Query(() => PaginatedUserInstitutionAccesses)
-  async userInstitutionAccesses(
+  async getPaginatedUserInstitutionAccesses(
     @Arg("limit", () => Int) limit: number,
-    @Arg("cursor", () => String, { nullable: true }) cursor: string | null
   ): Promise<PaginatedUserInstitutionAccesses> {
-    // 20 -> 21
     const realLimit = Math.min(50, limit);
     const reaLimitPlusOne = realLimit + 1;
 
     const replacements: any[] = [reaLimitPlusOne];
-
-    if (cursor) {
-      replacements.push(new Date(parseInt(cursor)));
-    }
+    const query = "SELECT * FROM user_institution_access limit $1";
 
     const userInstitutionAccesses = await getConnection().query(
-      // `
-      // select y.*
-      // from years y
-      // ${cursor ? `where y."createdAt" < $2` : ""}
-      // order by p."createdAt" DESC
-      // limit $1
-      // `,
-      `
-      select u.*
-      from user_institution_accesses u
-      limit $1
-      `,
+      query,
       replacements
     );
-
-    // const qb = getConnection()
-    //   .getRepository(Post)
-    //   .createQueryBuilder("p")
-    //   .innerJoinAndSelect("p.creator", "u", 'u.id = p."creatorId"')
-    //   .orderBy('p."createdAt"', "DESC")
-    //   .take(reaLimitPlusOne);
-
-    // if (cursor) {
-    //   qb.where('p."createdAt" < :cursor', {
-    //     cursor: new Date(parseInt(cursor)),
-    //   });
-    // }
-
-    // const posts = await qb.getMany();
-    // console.log("posts: ", posts);
 
     return {
       userInstitutionAccesses: userInstitutionAccesses.slice(0, realLimit),
@@ -146,18 +122,6 @@ export class UserInstitutionAccessResolver {
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
     console.log(req)
-    // not cascade way
-    // const post = await Post.findOne(id);
-    // if (!post) {
-    //   return false;
-    // }
-    // if (post.creatorId !== req.session.userId) {
-    //   throw new Error("not authorized");
-    // }
-
-    // await Updoot.delete({ postId: id });
-    // await Post.delete({ id });
-
     await User_Institution_Access.delete({ user_id /*, creatorId: req.session.userId*/ });
     return true;
   }

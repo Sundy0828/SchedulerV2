@@ -17,12 +17,20 @@ import {
   import { isAuth } from "../middleware/isAuth";
   import { MyContext } from "../types";
   
+  /**
+   * This is similar to a type/interface, this is just the graphql way. Use this instead of passing multiple values as arguments
+   * 
+  */
   @InputType()
   class CombinationInput {
     @Field()
     logical_operator: string;
   }
   
+  /**
+   * This is similar to a type/interface, this is just the graphql way. Use this instead of passing multiple values as arguments
+   * 
+  */
   @ObjectType()
   class PaginatedCombinations {
     @Field(() => [Combinations])
@@ -31,6 +39,10 @@ import {
     hasMore: boolean;
   }
   
+  /**
+   * Main Resovler For Combinations
+   * 
+  */
   @Resolver(Combinations)
   export class CombinationResolver {
     @FieldResolver(() => String)
@@ -38,69 +50,60 @@ import {
       return capability.logical_operator.slice(0, 50);
     }
   
-    // @FieldResolver(() => User)
-    // creator(@Root() year: Year, @Ctx() { userLoader }: MyContext) {
-    //   return userLoader.load(year.creatorId);
-    // }
-  
+    /**
+    * This is the function you will hit to grab all Institutions
+    * 
+    */
     @Query(() => PaginatedCombinations)
-    async combinations(
-      @Arg("limit", () => Int) limit: number,
-      @Arg("cursor", () => String, { nullable: true }) cursor: string | null
+    async getAllCombinations(
     ): Promise<PaginatedCombinations> {
-      // 20 -> 21
+      return  {
+        combinations: await Combinations.find(),
+        hasMore: false
+      }
+    }
+    
+    /**
+     * This is the function you will hit to grab a select amount of Combinations
+     * @param {Number} limit The amount of records you want back if more than 50 are specified it will return 50
+     * 
+    */
+    @Query(() => PaginatedCombinations)
+    async getPaginatedCombinations(
+      @Arg("limit", () => Int) limit: number,
+    ): Promise<PaginatedCombinations> {
       const realLimit = Math.min(50, limit);
       const reaLimitPlusOne = realLimit + 1;
-  
+
       const replacements: any[] = [reaLimitPlusOne];
-  
-      if (cursor) {
-        replacements.push(new Date(parseInt(cursor)));
-      }
-  
+      const query = "SELECT * FROM combinations limit $1";
+
       const combinations = await getConnection().query(
-        // `
-        // select y.*
-        // from years y
-        // ${cursor ? `where y."createdAt" < $2` : ""}
-        // order by p."createdAt" DESC
-        // limit $1
-        // `,
-        `
-        select c.*
-        from combinations c
-        limit $1
-        `,
+        query,
         replacements
       );
-  
-      // const qb = getConnection()
-      //   .getRepository(Post)
-      //   .createQueryBuilder("p")
-      //   .innerJoinAndSelect("p.creator", "u", 'u.id = p."creatorId"')
-      //   .orderBy('p."createdAt"', "DESC")
-      //   .take(reaLimitPlusOne);
-  
-      // if (cursor) {
-      //   qb.where('p."createdAt" < :cursor', {
-      //     cursor: new Date(parseInt(cursor)),
-      //   });
-      // }
-  
-      // const posts = await qb.getMany();
-      // console.log("posts: ", posts);
-  
+
       return {
         combinations: combinations.slice(0, realLimit),
         hasMore: combinations.length === reaLimitPlusOne,
       };
     }
   
+    /**
+     * This function will return a single Combination based on the id that is passed
+     * @param {Number} capability_id Apply a combination id to return a single record
+     * 
+    */
     @Query(() => Combinations, { nullable: true })
     post(@Arg("combination_id", () => Int) capability_id: number): Promise<Combinations | undefined> {
       return Combinations.findOne(capability_id);
     }
   
+    /**
+     * This function will create an Combination
+     * @param {String} name Pass a Combination name to be created
+     * 
+    */
     @Mutation(() => Combinations)
     @UseMiddleware(isAuth)
     async createCombination(
@@ -115,6 +118,12 @@ import {
       }).save();
     }
   
+    /**
+     * This function will update an Combination
+     * @param {Number} combination_id Pass an Combination Id
+     * @param {String} logical_operator Pass an Combination logical operator to be update
+     * 
+    */
     @Mutation(() => Combinations, { nullable: true })
     @UseMiddleware(isAuth)
     async updateCombination(
@@ -138,6 +147,11 @@ import {
       return result.raw[0];
     }
   
+    /**
+     * This function will delete an Institution
+     * @param {String} combination_id Pass an Combination id 
+     * 
+    */
     @Mutation(() => Boolean)
     @UseMiddleware(isAuth)
     async deleteCombination(
@@ -145,18 +159,6 @@ import {
       @Ctx() { req }: MyContext
     ): Promise<boolean> {
       console.log(req)
-      // not cascade way
-      // const post = await Post.findOne(id);
-      // if (!post) {
-      //   return false;
-      // }
-      // if (post.creatorId !== req.session.userId) {
-      //   throw new Error("not authorized");
-      // }
-  
-      // await Updoot.delete({ postId: id });
-      // await Post.delete({ id });
-  
       await Combinations.delete({ combination_id /*, creatorId: req.session.userId*/ });
       return true;
     }

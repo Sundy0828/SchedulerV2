@@ -8,7 +8,7 @@ import {
 
 @ObjectType()
 @Entity()
-export class Year extends BaseEntity {
+export class Years extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   year_id!: number;

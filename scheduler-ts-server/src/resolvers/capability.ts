@@ -10,19 +10,27 @@ import {
     Query,
     Resolver,
     Root,
-    UseMiddleware,
+    UseMiddleware, 
   } from "type-graphql";
   import { getConnection } from "typeorm";
   import { Capabilities } from "../entities/Capabilities";
   import { isAuth } from "../middleware/isAuth";
   import { MyContext } from "../types";
   
+  /**
+   * This is similar to a type/interface, this is just the graphql way. Use this instead of passing multiple values as arguments
+   * 
+  */
   @InputType()
   class CapabilityInput {
     @Field()
     name: string;
   }
   
+  /**
+   * This is similar to a type/interface, this is just the graphql way. Use this instead of passing multiple values as arguments
+   * 
+  */
   @ObjectType()
   class PaginatedCapabilities {
     @Field(() => [Capabilities])
@@ -31,6 +39,10 @@ import {
     hasMore: boolean;
   }
   
+  /**
+   * Main Resovler For Capabilities
+   * 
+  */
   @Resolver(Capabilities)
   export class CapabilityResolver {
     @FieldResolver(() => String)
@@ -38,69 +50,60 @@ import {
       return capability.name.slice(0, 50);
     }
   
-    // @FieldResolver(() => User)
-    // creator(@Root() year: Year, @Ctx() { userLoader }: MyContext) {
-    //   return userLoader.load(year.creatorId);
-    // }
-  
+    /**
+     * This is the function you will hit to grab all Institutions
+     * 
+    */
     @Query(() => PaginatedCapabilities)
-    async capabilities(
-      @Arg("limit", () => Int) limit: number,
-      @Arg("cursor", () => String, { nullable: true }) cursor: string | null
+    async getAllCapabilities(
     ): Promise<PaginatedCapabilities> {
-      // 20 -> 21
+      return  {
+        capabilities: await Capabilities.find(),
+        hasMore: false
+      }
+    }
+    
+    /**
+     * This is the function you will hit to grab a select amount of Capabilities
+     * @param {Number} limit The amount of records you want back if more than 50 are specified it will return 50
+     * 
+    */
+    @Query(() => PaginatedCapabilities)
+    async getPaginatedCapabilities(
+      @Arg("limit", () => Int) limit: number,
+    ): Promise<PaginatedCapabilities> {
       const realLimit = Math.min(50, limit);
       const reaLimitPlusOne = realLimit + 1;
-  
+
       const replacements: any[] = [reaLimitPlusOne];
-  
-      if (cursor) {
-        replacements.push(new Date(parseInt(cursor)));
-      }
-  
+      const query = "SELECT * FROM capabilities limit $1";
+
       const capabilities = await getConnection().query(
-        // `
-        // select y.*
-        // from years y
-        // ${cursor ? `where y."createdAt" < $2` : ""}
-        // order by p."createdAt" DESC
-        // limit $1
-        // `,
-        `
-        select c.*
-        from capabilities c
-        limit $1
-        `,
+        query,
         replacements
       );
-  
-      // const qb = getConnection()
-      //   .getRepository(Post)
-      //   .createQueryBuilder("p")
-      //   .innerJoinAndSelect("p.creator", "u", 'u.id = p."creatorId"')
-      //   .orderBy('p."createdAt"', "DESC")
-      //   .take(reaLimitPlusOne);
-  
-      // if (cursor) {
-      //   qb.where('p."createdAt" < :cursor', {
-      //     cursor: new Date(parseInt(cursor)),
-      //   });
-      // }
-  
-      // const posts = await qb.getMany();
-      // console.log("posts: ", posts);
-  
+
       return {
         capabilities: capabilities.slice(0, realLimit),
         hasMore: capabilities.length === reaLimitPlusOne,
       };
     }
-  
+
+    /**
+     * This function will return a single Capability based on the id that is passed
+     * @param {Number} capability_id Apply a Capability id to return a single record
+     * 
+    */
     @Query(() => Capabilities, { nullable: true })
     post(@Arg("capability_id", () => Int) capability_id: number): Promise<Capabilities | undefined> {
       return Capabilities.findOne(capability_id);
     }
-  
+    
+    /**
+     * This function will create an Capability
+     * @param {String} name Pass an Capability name to be created
+     * 
+    */
     @Mutation(() => Capabilities)
     @UseMiddleware(isAuth)
     async createCapability(
@@ -114,11 +117,17 @@ import {
         // creatorId: req.session.userId,
       }).save();
     }
-  
+    
+    /**
+     * This function will update an Capability
+     * @param {Number} capability_id Pass an Capability Id
+     * @param {String} name Pass an Capability name to be update
+     * 
+    */
     @Mutation(() => Capabilities, { nullable: true })
     @UseMiddleware(isAuth)
     async updateCapability(
-      @Arg("capability_id", () => Int) year_id: number,
+      @Arg("capability_id", () => Int) capability_id: number,
       @Arg("name") name: string,
       @Ctx() { req }: MyContext
     ): Promise<Capabilities | null> {
@@ -127,8 +136,8 @@ import {
         .createQueryBuilder()
         .update(Capabilities)
         .set({ name })
-        .where('capability_id = :id'/*and "creatorId" = :creatorId'*/, {
-          year_id
+        .where('capability_id = :capability_id'/*and "creatorId" = :creatorId'*/, {
+          capability_id
         //   ,
         //   creatorId: req.session.userId,
         })
@@ -138,6 +147,11 @@ import {
       return result.raw[0];
     }
   
+    /**
+     * This function will delete an Capability
+     * @param {String} capability_id Pass an Capability id 
+     * 
+    */
     @Mutation(() => Boolean)
     @UseMiddleware(isAuth)
     async deleteCapability(
@@ -145,18 +159,6 @@ import {
       @Ctx() { req }: MyContext
     ): Promise<boolean> {
       console.log(req)
-      // not cascade way
-      // const post = await Post.findOne(id);
-      // if (!post) {
-      //   return false;
-      // }
-      // if (post.creatorId !== req.session.userId) {
-      //   throw new Error("not authorized");
-      // }
-  
-      // await Updoot.delete({ postId: id });
-      // await Post.delete({ id });
-  
       await Capabilities.delete({ capability_id /*, creatorId: req.session.userId*/ });
       return true;
     }
