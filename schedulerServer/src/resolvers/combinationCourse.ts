@@ -13,7 +13,7 @@ import {
     UseMiddleware,
   } from "type-graphql";
   import { getConnection } from "typeorm";
-  import { Combination_Courses } from "../entities/Combination_Courses";
+  import { CombinationCourses } from "../entities/CombinationCourses";
   import { isAuth } from "../middleware/isAuth";
   import { MyContext } from "../types";
   
@@ -35,8 +35,8 @@ import {
   */
   @ObjectType()
   class PaginatedCombinationCourses {
-    @Field(() => [Combination_Courses])
-    combinationCourses: Combination_Courses[];
+    @Field(() => [CombinationCourses])
+    combinationCourses: CombinationCourses[];
     @Field()
     hasMore: boolean;
   }
@@ -45,10 +45,10 @@ import {
    * Main Resovler For Combination_Course
    * 
   */
-  @Resolver(Combination_Courses)
+  @Resolver(CombinationCourses)
   export class CombinationCourseResolver {
     @FieldResolver(() => String)
-    textSnippet(@Root() combinationCourse: Combination_Courses) {
+    textSnippet(@Root() combinationCourse: CombinationCourses) {
       console.log(combinationCourse)
       return;
       //return combinationCourse.course_id.slice(0, 50);
@@ -62,7 +62,7 @@ import {
     async getAllCombinationCourses(
     ): Promise<PaginatedCombinationCourses> {
       return  {
-        combinationCourses: await Combination_Courses.find(),
+        combinationCourses: await CombinationCourses.find(),
         hasMore: false
       }
     }
@@ -98,9 +98,9 @@ import {
      * @param {Number} combination_id Apply a combination_ id to return a single record
      * 
     */
-    @Query(() => Combination_Courses, { nullable: true })
-    post(@Arg("combination_id", () => Int) combination_id: number): Promise<Combination_Courses | undefined> {
-      return Combination_Courses.findOne(combination_id);
+    @Query(() => CombinationCourses, { nullable: true })
+    post(@Arg("combination_id", () => Int) combination_id: number): Promise<CombinationCourses | undefined> {
+      return CombinationCourses.findOne(combination_id);
     }
   
     /**
@@ -108,14 +108,14 @@ import {
      * @param {String} name Pass an Combination_Courses name to be created
      * 
     */
-    @Mutation(() => Combination_Courses)
+    @Mutation(() => CombinationCourses)
     @UseMiddleware(isAuth)
     async createCombinationCourse(
       @Arg("input") input: CombinationCourseInput,
       @Ctx() { req }: MyContext
-    ): Promise<Combination_Courses> {
+    ): Promise<CombinationCourses> {
       console.log(req)
-      return Combination_Courses.create({
+      return CombinationCourses.create({
         ...input
         // ,
         // creatorId: req.session.userId,
@@ -129,18 +129,18 @@ import {
      * @param {Number} sub_combination_id Pass an sub combination id to be update
      * 
     */
-    @Mutation(() => Combination_Courses, { nullable: true })
+    @Mutation(() => CombinationCourses, { nullable: true })
     @UseMiddleware(isAuth)
     async updateCombinationCourse(
       @Arg("combination_id", () => Int) combination_id: number,
       @Arg("course_id") course_id: number,
       @Arg("sub_combination_id") sub_combination_id: number,
       @Ctx() { req }: MyContext
-    ): Promise<Combination_Courses | null> {
+    ): Promise<CombinationCourses | null> {
       console.log(req)
       const result = await getConnection()
         .createQueryBuilder()
-        .update(Combination_Courses)
+        .update(CombinationCourses)
         .set({ course_id, sub_combination_id })
         .where('combination_id = :id'/*and "creatorId" = :creatorId'*/, {
           combination_id
@@ -165,7 +165,7 @@ import {
       @Ctx() { req }: MyContext
     ): Promise<boolean> {
       console.log(req)
-      await Combination_Courses.delete({ combination_id /*, creatorId: req.session.userId*/ });
+      await CombinationCourses.delete({ combination_id /*, creatorId: req.session.userId*/ });
       return true;
     }
   }

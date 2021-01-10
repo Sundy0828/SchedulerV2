@@ -22,12 +22,12 @@ import { Combinations } from "./entities/Combinations";
 import { Courses } from "./entities/Courses";
 import { Semesters } from "./entities/Semesters";
 import { Users } from "./entities/Users";
-import { User_Institution_Access } from "./entities/User_Institution_Access";
-import { User_Types } from "./entities/User_Types";
+import { UserInstitutionAccess } from "./entities/UserInstitutionAccess";
+import { UserTypes } from "./entities/UserTypes";
 import { Years } from "./entities/Years";
-import { Combination_Courses } from "./entities/Combination_Courses";
+import { CombinationCourses } from "./entities/CombinationCourses";
 import { Discipline_Courses } from "./entities/Discipline_Courses";
-import { User_Type_Capabilites } from "./entities/User_Type_Capabilites";
+import { UserTypeCapabilites } from "./entities/UserTypeCapabilites";
 import { Disciplines } from "./entities/Disciplines";
 import { DisciplineCourseResolver } from "./resolvers/disciplineCourse";
 import { CombinationResolver } from "./resolvers/combination";
@@ -52,16 +52,16 @@ const main = async () => {
     entities: [
       Capabilities,
       Combinations,
-      Combination_Courses,
+      CombinationCourses,
       Courses,
       Disciplines,
       Discipline_Courses,
       Institutions,
       Semesters,
       Users, 
-      User_Institution_Access,
-      User_Types,
-      User_Type_Capabilites,
+      UserInstitutionAccess,
+      UserTypes,
+      UserTypeCapabilites,
       Years
     ], 
     host: dbConfig.host,  

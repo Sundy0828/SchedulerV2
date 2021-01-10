@@ -13,7 +13,7 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
-import { User_Institution_Access } from "../entities/User_Institution_Access";
+import { UserInstitutionAccess } from "../entities/UserInstitutionAccess";
 import { isAuth } from "../middleware/isAuth";
 import { MyContext } from "../types";
 
@@ -25,18 +25,18 @@ class UserInstitutionAccessInput {
 
 @ObjectType()
 class PaginatedUserInstitutionAccesses {
-  @Field(() => [User_Institution_Access])
-  userInstitutionAccesses: User_Institution_Access[];
+  @Field(() => [UserInstitutionAccess])
+  userInstitutionAccesses: UserInstitutionAccess[];
   @Field()
   hasMore: boolean;
 }
 
-@Resolver(User_Institution_Access)
+@Resolver(UserInstitutionAccess)
 export class UserInstitutionAccessResolver {
   @FieldResolver(() => String)
-  textSnippet(@Root() userInstitutionAccess: User_Institution_Access) {
+  textSnippet(@Root() userInstitutionAccess: UserInstitutionAccess) {
     console.log(userInstitutionAccess)
-    return User_Institution_Access.name.slice(0, 50);
+    return UserInstitutionAccess.name.slice(0, 50);
   }
 
   /**
@@ -47,7 +47,7 @@ export class UserInstitutionAccessResolver {
   async getAllUserInstitutionAccesses(
   ): Promise<PaginatedUserInstitutionAccesses> {
     return  {
-      userInstitutionAccesses: await User_Institution_Access.find(),
+      userInstitutionAccesses: await UserInstitutionAccess.find(),
       hasMore: false
     }
   }
@@ -73,36 +73,36 @@ export class UserInstitutionAccessResolver {
     };
   }
 
-  @Query(() => User_Institution_Access, { nullable: true })
-  post(@Arg("user_id", () => Int) user_id: number): Promise<User_Institution_Access | undefined> {
-    return User_Institution_Access.findOne(user_id);
+  @Query(() => UserInstitutionAccess, { nullable: true })
+  post(@Arg("user_id", () => Int) user_id: number): Promise<UserInstitutionAccess | undefined> {
+    return UserInstitutionAccess.findOne(user_id);
   }
 
-  @Mutation(() => User_Institution_Access)
+  @Mutation(() => UserInstitutionAccess)
   @UseMiddleware(isAuth)
   async createUserInstitutionAccess(
     @Arg("input") input: UserInstitutionAccessInput,
     @Ctx() { req }: MyContext
-  ): Promise<User_Institution_Access> {
+  ): Promise<UserInstitutionAccess> {
     console.log(req)
-    return User_Institution_Access.create({
+    return UserInstitutionAccess.create({
       ...input
       // ,
       // creatorId: req.session.userId,
     }).save();
   }
 
-  @Mutation(() => User_Institution_Access, { nullable: true })
+  @Mutation(() => UserInstitutionAccess, { nullable: true })
   @UseMiddleware(isAuth)
   async updateUserInstitutionAccess(
     @Arg("user_id", () => Int) user_id: number,
     @Arg("institution_id") institution_id: number,
     @Ctx() { req }: MyContext
-  ): Promise<User_Institution_Access | null> {
+  ): Promise<UserInstitutionAccess | null> {
     console.log(req)
     const result = await getConnection()
       .createQueryBuilder()
-      .update(User_Institution_Access)
+      .update(UserInstitutionAccess)
       .set({ institution_id })
       .where('user_id = :id'/*and "creatorId" = :creatorId'*/, {
         user_id
@@ -122,7 +122,7 @@ export class UserInstitutionAccessResolver {
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
     console.log(req)
-    await User_Institution_Access.delete({ user_id /*, creatorId: req.session.userId*/ });
+    await UserInstitutionAccess.delete({ user_id /*, creatorId: req.session.userId*/ });
     return true;
   }
 }

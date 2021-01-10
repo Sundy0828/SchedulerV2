@@ -3,19 +3,20 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  BaseEntity
+  BaseEntity,
 } from "typeorm";
 
 @ObjectType()
 @Entity()
-export class User_Type_Capabilites extends BaseEntity {
+export class UserTypes extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   user_type_id!: number;
 
   @Field()
   @Column()
-  capability_id!: number;
+  name!: string;
+
 
 // Should add these
 //   @Field()

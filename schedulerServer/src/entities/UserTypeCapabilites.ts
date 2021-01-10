@@ -3,24 +3,19 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  BaseEntity,
-} from "typeorm"; 
+  BaseEntity
+} from "typeorm";
 
 @ObjectType()
 @Entity()
-export class Combination_Courses extends BaseEntity {
-  @Field() 
+export class UserTypeCapabilites extends BaseEntity {
+  @Field()
   @PrimaryGeneratedColumn()
-  combination_id!: number;
+  user_type_id!: number;
 
   @Field()
   @Column()
-  course_id: number;
-
-  @Field()
-  @Column()
-  sub_combination_id: number;
-
+  capability_id!: number;
 
 // Should add these
 //   @Field()

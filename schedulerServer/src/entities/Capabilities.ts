@@ -6,7 +6,7 @@ import {
   BaseEntity,
 } from "typeorm";
 
-import { User_Type_Capabilites  } from "./User_Type_Capabilites";
+import { UserTypeCapabilites  } from "./UserTypeCapabilites";
 
 @ObjectType() 
 @Entity()
@@ -19,7 +19,7 @@ export class Capabilities extends BaseEntity {
   @Column()
   name!: string;
 
-  userTypeCapabilites:User_Type_Capabilites;
+  userTypeCapabilites:UserTypeCapabilites;
 
 // Should add these
 //   @Field()

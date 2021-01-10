@@ -3,19 +3,27 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  BaseEntity,
-} from "typeorm";
+  BaseEntity
+} from "typeorm"; 
+// import { Courses } from "./Courses";
 
 @ObjectType()
 @Entity()
-export class User_Institution_Access extends BaseEntity {
-  @Field()
+export class CombinationCourses extends BaseEntity {
+  @Field() 
   @PrimaryGeneratedColumn()
-  user_id!: number;
+  combination_id!: number;
 
   @Field()
   @Column()
-  institution_id!: number;
+  course_id: number;
+
+  @Field()
+  @Column()
+  sub_combination_id: number;
+
+  // @OneToMany(() => Courses, (courses) => courses.name)
+  // courses: Courses[];
 
 
 // Should add these
