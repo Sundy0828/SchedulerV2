@@ -93,29 +93,6 @@ export class UserTypeCapabilitesResolver {
     }).save();
   }
 
-  @Mutation(() => User_Type_Capabilites, { nullable: true })
-  @UseMiddleware(isAuth)
-  async updateUserTypeCapability(
-    @Arg("user_type_id", () => Int) user_type_id: number,
-    @Arg("capability_id") capability_id: number,
-    @Ctx() { req }: MyContext
-  ): Promise<User_Type_Capabilites | null> {
-    console.log(req)
-    const result = await getConnection()
-      .createQueryBuilder()
-      .update(User_Type_Capabilites)
-      .set({ capability_id })
-      .where('user_type_id = :id'/*and "creatorId" = :creatorId'*/, {
-        user_type_id
-      //   ,
-      //   creatorId: req.session.userId,
-      })
-      .returning("*")
-      .execute();
-
-    return result.raw[0];
-  }
-
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async deleteUserTypeCapability(
