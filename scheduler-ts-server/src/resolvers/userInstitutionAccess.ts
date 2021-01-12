@@ -92,29 +92,6 @@ export class UserInstitutionAccessResolver {
     }).save();
   }
 
-  @Mutation(() => User_Institution_Access, { nullable: true })
-  @UseMiddleware(isAuth)
-  async updateUserInstitutionAccess(
-    @Arg("user_id", () => Int) user_id: number,
-    @Arg("institution_id") institution_id: number,
-    @Ctx() { req }: MyContext
-  ): Promise<User_Institution_Access | null> {
-    console.log(req)
-    const result = await getConnection()
-      .createQueryBuilder()
-      .update(User_Institution_Access)
-      .set({ institution_id })
-      .where('user_id = :id'/*and "creatorId" = :creatorId'*/, {
-        user_id
-      //   ,
-      //   creatorId: req.session.userId,
-      })
-      .returning("*")
-      .execute();
-
-    return result.raw[0];
-  }
-
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async deleteUserInstitutionAccess(

@@ -93,29 +93,6 @@ export class DisciplineCourseResolver {
     }).save();
   }
 
-  @Mutation(() => Discipline_Courses, { nullable: true })
-  @UseMiddleware(isAuth)
-  async updateDisciplineCourse(
-    @Arg("discipline_id", () => Int) discipline_id: number,
-    @Arg("course_id") course_id: number,
-    @Ctx() { req }: MyContext
-  ): Promise<Discipline_Courses | null> {
-    console.log(req)
-    const result = await getConnection()
-      .createQueryBuilder()
-      .update(Discipline_Courses)
-      .set({ course_id })
-      .where('discipline_id = :id'/*and "creatorId" = :creatorId'*/, {
-        discipline_id
-      //   ,
-      //   creatorId: req.session.userId,
-      })
-      .returning("*")
-      .execute();
-
-    return result.raw[0];
-  }
-
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async deleteDisciplineCourse(
