@@ -1,0 +1,5 @@
+mutation CreateInstitution($name: String!) {
+    createInstitution(input:{name:$name}) {
+        name
+    }
+}

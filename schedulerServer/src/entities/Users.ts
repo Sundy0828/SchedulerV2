@@ -13,9 +13,8 @@ export class Users extends BaseEntity {
   @PrimaryGeneratedColumn()
   user_id!: number;
 
-  @Field()
-  @Column()
-  name!: string;
+  @Column('jsonb', { array: true })
+  name: {}[];
 
   @Field()
   @Column({ unique: true })
@@ -24,14 +23,14 @@ export class Users extends BaseEntity {
   @Column()
   password!: string;
 
-  @Column()
-  user_meta!: string;
+  @Column('jsonb', { array: true })
+  user_meta: {}[];
 
   @Column()
   first_failed_login: Date;
 
   @Column()
-  login_attemps!: number;
+  login_attempts!: number;
 
   @Column()
   timeout_start: Date;

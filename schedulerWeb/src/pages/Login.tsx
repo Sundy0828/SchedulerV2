@@ -6,7 +6,9 @@ import { InputField } from '../components/InputField';
 import { useRouter } from "next/router";
 import { API_CONFIG } from '../constants/constants'
 import axios from 'axios';
-
+import { useMutation } from 'urql';
+import { useCreateInstitutionMutation,useLoginMutation } from '../generated/graphql';
+import {toErrorMap } from "../utils/toErrorMap";
 interface LoginProps {
 
 }
@@ -16,7 +18,8 @@ const Login: React.FC<LoginProps> = ({}) => {
     const [show, setShow] = React.useState(false);
     const handleClick = () => setShow(!show);
     const toast = createStandaloneToast()
-
+    const [, create] = useCreateInstitutionMutation();
+    const [, performLogin] = useLoginMutation();
     useEffect(() => {
         // On Mount only runs once
     }, []);
@@ -28,51 +31,22 @@ const Login: React.FC<LoginProps> = ({}) => {
             </Center>
             <Formik 
                 initialValues={{username: '', password: ''}} 
-                onSubmit={(values,actions) => {
-                    console.log(values)
-                    axios({
-                        method: 'post',
-                        url: `${API_CONFIG.API_URL}/Login`,
-                        headers: {}, 
-                        data: {
-                            username: encodeURI(values.username),
-                            password: encodeURI(values.password)
-                        }
-                      }).then((response) => {
-                        // need to add logic if the login was successful
-                        const {data: {success}} = response;
-                        if (success) {
-                            // Correct Login Redirect To Home
-                            toast({
-                                title: "Login Successful",
-                                description: "You were logged in successfully.",
-                                status: "success",
-                                duration: 3000,
-                                isClosable: true,
-                            })
-                        } else {
-                            // Incorrect Login
-                            toast({
-                                title: "Login Failed",
-                                description: "Incorrect Information.",
-                                status: "warning",
-                                duration: 3000,
-                                isClosable: true,
-                            })
-                        }
-                        // Disable the Login Button
-                        actions.setSubmitting(false)
-                    }).catch(err => {
-                        console.warn(err)
-                        actions.setSubmitting(false)
+                onSubmit={async(values,{setErrors}) => {
+                    const resp = await performLogin(values);
+                    console.log(resp)
+                    if (resp.data?.login.errors) {
+                        setErrors(toErrorMap(resp.data.login.errors))
+                    } else {
                         toast({
-                            title: "Hmm. Something went wrong.",
-                            description: "An error occurred, the login could not be completed.",
-                            status: "error",
+                            title: "Login Successful",
+                            description: "You were logged in successfully.",
+                            status: "success",
                             duration: 3000,
                             isClosable: true,
                         })
-                    });
+                        router.push('/register')// need to change to home
+                    }
+                    return resp;
                 }}
             > 
                 {( props) => (

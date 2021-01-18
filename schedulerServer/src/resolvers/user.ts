@@ -154,12 +154,15 @@ export class UserResolver {
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
     console.log(req)
+    console.log('_______')
+    console.log(options.name)
     const errors = validateRegister(options);
     if (errors) {
       return { errors };
     }
 
     const hashedPassword = await argon2.hash(options.password);
+    console.log(hashedPassword)
     let user;
     try {
       // User.create({}).save()
@@ -168,8 +171,16 @@ export class UserResolver {
         .insert()
         .into(Users)
         .values({
+          name: [],
           email: options.email,
           password: hashedPassword,
+          user_meta: [],
+          first_failed_login: new Date(),
+          login_attempts: 0,
+          timeout_start: new Date(),
+          user_type_id: 1,
+          salt : "123",
+          user_key: "561f6c49-475f-49d0-9ae5-2905e4bad33a"
         })
         .returning("*")
         .execute();
@@ -207,7 +218,7 @@ export class UserResolver {
     const user = await Users.findOne(
       usernameOrEmail.includes("@")
         ? { where: { email: usernameOrEmail } }
-        : { where: { username: usernameOrEmail } }
+        : { where: { email: usernameOrEmail } }
     );
     if (!user) {
       return {
