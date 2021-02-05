@@ -1,0 +1,12 @@
+ mutation Login($username: String!, $password: String!){ #$options: UsernamePasswordInput!
+    login(usernameOrEmail: $username, password: $password) {
+        errors {
+            field,
+            message
+        }
+        user {
+            user_id,
+            email
+        }
+    }
+ }

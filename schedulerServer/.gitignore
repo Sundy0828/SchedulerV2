@@ -1,6 +1,4 @@
-# package directories
+dist
 node_modules
-jspm_packages
-
-# Serverless directories
-.serverless
+# you should add that
+# .env
